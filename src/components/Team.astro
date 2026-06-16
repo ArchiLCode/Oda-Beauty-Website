@@ -1,0 +1,35 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="section" id="team">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-kicker">Команда</p>
+      <h2 class="section-title">Мастера ODa</h2>
+      <p class="section-copy">Каждый мастер отвечает за своё направление и помогает подобрать комфортный формат ухода.</p>
+    </div>
+    <div class="rail-wrap">
+      <div class="rail-controls" aria-label="Навигация команды">
+        <button class="rail-button" type="button" data-rail-prev="team-rail" aria-label="Предыдущие мастера">←</button>
+        <button class="rail-button" type="button" data-rail-next="team-rail" aria-label="Следующие мастера">→</button>
+      </div>
+      <div class="rail" data-rail id="team-rail">
+        {content.team.map((member) => (
+          <article class="card member-card">
+            <img src={member.image.src} alt={member.image.alt} loading="lazy" />
+            <p>{member.role}</p>
+            <h3>{member.name}</h3>
+            <a class="button button--ghost" href={member.bookingUrl} target="_blank" rel="noreferrer">Записаться к мастеру</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

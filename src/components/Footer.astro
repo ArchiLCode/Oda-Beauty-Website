@@ -1,0 +1,46 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+---
+
+<footer class="footer" id="contacts">
+  <div class="container footer-grid">
+    <div class="footer-card glass">
+      <a class="footer-brand brand-wordmark" href="#main">O<span>Da</span></a>
+      <ul class="contact-list">
+        <li><strong>Контакты</strong></li>
+        <li><a href={content.contacts.phoneHref}>{content.contacts.phone}</a></li>
+        <li>
+          <a href={content.contacts.mapUrl} target="_blank" rel="noreferrer">
+            {content.contacts.city}, {content.contacts.address}
+          </a>
+        </li>
+        <li>{content.contacts.hours}</li>
+      </ul>
+      <div class="social-row">
+        {content.socials.map((social) => (
+          <a class="icon-link" href={social.url} target="_blank" rel="noreferrer" aria-label={social.label}>
+            <img src={social.icon.src} alt="" loading="lazy" />
+          </a>
+        ))}
+      </div>
+      <p class="legal">
+        Все цены на сайте носят информационный характер и не являются публичной офертой. Все права защищены © 2026.
+      </p>
+    </div>
+    <div class="footer-card glass">
+      <h2 class="section-title footer-map-title">Мы на карте</h2>
+      <iframe
+        class="map-frame"
+        src={content.contacts.mapEmbedUrl}
+        loading="lazy"
+        title="ODa Beauty на карте"
+      ></iframe>
+    </div>
+  </div>
+</footer>

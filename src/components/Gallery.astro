@@ -1,0 +1,26 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="section section--tight" id="gallery">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-kicker">Работы и детали</p>
+      <h2 class="section-title">Галерея</h2>
+      <p class="section-copy">Фото работ и атмосферы салона помогают почувствовать стиль ODa до первого визита.</p>
+    </div>
+    <div class="gallery-grid">
+      {content.gallery.slice(0, 9).map((item) => (
+        <figure class="gallery-card card">
+          <img src={item.image.src} alt={item.image.alt} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="section" id="about">
+  <div class="container about-grid">
+    <div class="about-media glass">
+      <img src={content.about.image.src} alt={content.about.image.alt} loading="lazy" />
+    </div>
+    <div class="about-copy">
+      <div class="section-heading">
+        <p class="section-kicker">Атмосфера ODa</p>
+        <h2 class="section-title">{content.about.title}</h2>
+      </div>
+      {content.about.text.map((paragraph) => <p>{paragraph}</p>)}
+      <ul class="hero-services">
+        <li>Качественные материалы</li>
+        <li>Индивидуальный подход</li>
+        <li>Онлайн-запись</li>
+      </ul>
+    </div>
+  </div>
+</section>

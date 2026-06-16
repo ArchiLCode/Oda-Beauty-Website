@@ -1,0 +1,40 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+const popular = content.services.items.filter((service) => service.featured).slice(0, 6);
+---
+
+<section class="section" id="popular">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-kicker">Выбор гостей</p>
+      <h2 class="section-title">Популярные услуги</h2>
+      <p class="section-copy">Самые частые записи в ODa: аккуратный маникюр, SMART-педикюр, брови, ресницы и окрашивание.</p>
+    </div>
+    <div class="rail-wrap">
+      <div class="rail-controls" aria-label="Навигация популярных услуг">
+        <button class="rail-button" type="button" data-rail-prev="popular-rail" aria-label="Предыдущие услуги">←</button>
+        <button class="rail-button" type="button" data-rail-next="popular-rail" aria-label="Следующие услуги">→</button>
+      </div>
+      <div class="rail" data-rail id="popular-rail">
+        {popular.map((service) => (
+          <article class="card service-card">
+            <img src={service.image.src} alt={service.image.alt} loading="lazy" />
+            <div class="service-card-body">
+              <h3>{service.title}</h3>
+              <div class="price-row">
+                <span>{service.price} • {service.duration}</span>
+                <a class="button" href={service.bookingUrl} target="_blank" rel="noreferrer">Запись</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

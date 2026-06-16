@@ -1,0 +1,37 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+const stars = '★★★★★';
+---
+
+<section class="section" id="reviews">
+  <div class="container">
+    <div class="section-heading center">
+      <p class="section-kicker">Отзывы</p>
+      <h2 class="section-title">Гости возвращаются</h2>
+      <p class="section-copy">Сохранили отзывы из текущей версии и вывели общий рейтинг DIKIDI отдельным стеклянным блоком.</p>
+    </div>
+    <div class="rating-panel glass">
+      <div class="rating-value">{content.reviews.rating.toFixed(1)}</div>
+      <div>
+        <div class="stars" aria-label={`Рейтинг ${content.reviews.rating} из 5`}>{stars}</div>
+        <strong>Наш рейтинг в DIKIDI</strong>
+      </div>
+      <a class="button button--ghost" href={content.reviews.externalUrl} target="_blank" rel="noreferrer">{content.reviews.count}</a>
+    </div>
+    <div class="review-grid">
+      {content.reviews.items.map((review) => (
+        <article class="review-card glass">
+          <div class="stars" aria-hidden="true">{stars}</div>
+          <h3>{review.author}</h3>
+          <p>{review.text}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

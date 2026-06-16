@@ -1,0 +1,25 @@
+{
+  "name": "oda-beauty-website",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "test": "vitest run",
+    "verify": "npm run test && npm run build"
+  },
+  "dependencies": {
+    "@fontsource/federo": "^5.2.8",
+    "@fontsource/manrope": "^5.2.8",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "latest",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}

@@ -1,0 +1,52 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+const defaultCategory = content.services.categories[0].id;
+---
+
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-heading center">
+      <p class="section-kicker">Цены и запись</p>
+      <h2 class="section-title">Услуги и цены</h2>
+      <p class="section-copy">Выберите направление, сравните стоимость и сразу перейдите к записи на нужную услугу.</p>
+    </div>
+    <div class="services-panel glass" data-services>
+      <div class="service-tabs" role="tablist" aria-label="Категории услуг">
+        {content.services.categories.map((category) => (
+          <button
+            class="service-tab"
+            type="button"
+            role="tab"
+            data-service-tab={category.id}
+            aria-selected={category.id === defaultCategory ? 'true' : 'false'}
+          >
+            <img src={category.image.src} alt="" loading="lazy" />
+            {category.title}
+          </button>
+        ))}
+      </div>
+      <div class="services-grid">
+        {content.services.items.map((service) => (
+          <article
+            class:list={['service-row', { 'is-featured glass': service.featured }]}
+            data-service-card={service.categoryId}
+            hidden={service.categoryId !== defaultCategory}
+          >
+            <img src={service.image.src} alt={service.image.alt} loading="lazy" />
+            <div>
+              <h3>{service.title}</h3>
+              <p>{service.price} • {service.duration}</p>
+            </div>
+            <a class="button button--ghost" href={service.bookingUrl} target="_blank" rel="noreferrer">Записаться</a>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

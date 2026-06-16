@@ -1,0 +1,48 @@
+---
+import type { LandingContent } from '../content/types';
+
+interface Props {
+  content: LandingContent;
+}
+
+const { content } = Astro.props;
+---
+
+<section class="hero" id="main">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <h1 class="hero-title brand-wordmark">
+        O<span>Da</span>
+        <small>Beauty Salon</small>
+      </h1>
+      <p class="hero-lead">
+        Салон красоты в Смоленске, где маникюр, волосы, брови, ресницы и визаж собираются в спокойный персональный уход.
+      </p>
+      <ul class="hero-services" aria-label="Услуги">
+        {content.hero.services.map((service) => <li>{service}</li>)}
+      </ul>
+      <div class="hero-actions">
+        <a class="button" href={content.hero.bookingUrl} target="_blank" rel="noreferrer">Записаться онлайн</a>
+        <a class="button button--ghost" href="#services">Смотреть услуги</a>
+        <div class="hero-contact" aria-label="Контакты">
+          <a href={content.contacts.phoneHref}>{content.contacts.phone}</a>
+          <span>{content.contacts.city}, {content.contacts.address}</span>
+        </div>
+      </div>
+      <a class="next-preview" href="#popular">Популярные услуги</a>
+    </div>
+    <div class="hero-media glass">
+      <picture>
+        <source media="(max-width: 720px)" srcset={content.hero.mobileImage.src} />
+        <img src={content.hero.desktopImage.src} alt={content.hero.desktopImage.alt} fetchpriority="high" />
+      </picture>
+      <div class="hero-media-card glass">
+        <p>Уютная атмосфера, аккуратная работа и запись онлайн в удобное время.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container brand-strip glass" aria-label="Бренды материалов">
+  {content.brands.map((brand) => <img src={brand.image.src} alt={brand.image.alt} loading="lazy" />)}
+</div>
