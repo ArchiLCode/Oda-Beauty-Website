@@ -173,6 +173,7 @@ img {
   line-height: 1;
   text-decoration: none;
   transition:
+    transform 180ms ease,
     box-shadow 180ms ease,
     background 180ms ease;
 }
@@ -180,6 +181,7 @@ img {
 .button:hover {
   background: var(--color-rose-deep);
   box-shadow: 0 16px 36px rgba(169, 47, 98, 0.26);
+  transform: translateY(-2px);
 }
 
 .button:active {
@@ -566,6 +568,7 @@ img {
     background 160ms ease,
     border-color 160ms ease,
     color 160ms ease,
+    transform 160ms ease,
     opacity 160ms ease;
 }
 
@@ -573,6 +576,7 @@ img {
   border-color: rgba(169, 47, 98, 0.24);
   background: white;
   color: var(--color-rose-deep);
+  transform: translateY(-2px);
 }
 
 .rail-button:disabled {
@@ -951,6 +955,10 @@ img {
   text-decoration: none;
   text-transform: uppercase;
   transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.floating-cta:hover {
+  transform: translateY(-3px);
 }
 
 .floating-cta::before {
