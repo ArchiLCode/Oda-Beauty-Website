@@ -7,7 +7,8 @@ documents, validates the mapped `LandingContent`, and writes the result to `dist
 
 1. Log in with `npx sanity login`.
 2. Create a project in Sanity Manage and create a public dataset named `production`.
-3. Copy `.env.example` to `.env` and set `SANITY_PROJECT_ID`.
+3. Copy `.env.example` to `.env` and set `SANITY_PROJECT_ID`. The CLI mirrors this value into the
+   browser-safe Studio variable automatically. Keep the dataset as `production`.
 4. Create an Editor token and set it locally as `SANITY_WRITE_TOKEN` for the initial import.
 5. Run `npm run studio:schema` to validate and extract the Studio schema.
 6. Run `npm run sanity:import` to upload local CMS images and create or replace deterministic documents.
