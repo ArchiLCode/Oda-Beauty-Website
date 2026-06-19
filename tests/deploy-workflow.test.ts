@@ -18,7 +18,11 @@ describe('Timeweb deploy workflow', () => {
 
     expect(workflow).toContain('apt-get install -y lftp');
     expect(workflow).toContain('mirror --reverse --delete');
+    expect(workflow).toContain('--parallel=1');
+    expect(workflow).not.toContain('--parallel=4');
     expect(workflow).toContain('ftp|ftps');
+    expect(workflow).toContain('"$TIMEWEB_FTP_REMOTE_PATH" == /home/*');
+    expect(workflow).toContain('Use an FTP-virtual path such as /public_html');
     expect(workflow).not.toContain('TIMEWEB_SSH_KEY');
     expect(workflow).not.toContain('ssh-keyscan');
     expect(workflow).not.toContain('rsync ');

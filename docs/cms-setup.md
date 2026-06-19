@@ -45,7 +45,7 @@ Add these repository secrets:
 | `TIMEWEB_FTP_USER` | FTP user from the Timeweb control panel |
 | `TIMEWEB_FTP_PASSWORD` | FTP password |
 | `TIMEWEB_FTP_PROTOCOL` | `ftps` when explicit TLS is available; otherwise `ftp` |
-| `TIMEWEB_FTP_REMOTE_PATH` | Absolute FTP path to the domain's public directory; never `/` |
+| `TIMEWEB_FTP_REMOTE_PATH` | Absolute path inside the FTP account root, usually `/public_html`; do not use the server path `/home/c/...` |
 
 The workflow verifies the static fallback, builds the published Sanity content, installs `lftp`, and
 mirrors `dist/` into the target directory while deleting stale remote files. With `ftps`, TLS and

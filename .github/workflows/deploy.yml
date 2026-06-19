@@ -77,6 +77,10 @@ jobs:
             echo "TIMEWEB_FTP_REMOTE_PATH must be a safe absolute non-root directory." >&2
             exit 1
           fi
+          if [[ "$TIMEWEB_FTP_REMOTE_PATH" == /home/* ]]; then
+            echo "TIMEWEB_FTP_REMOTE_PATH is relative to the FTP account root. Use an FTP-virtual path such as /public_html, not /home/..." >&2
+            exit 1
+          fi
 
       - name: Deploy to Timeweb over FTP
         run: |
@@ -92,6 +96,6 @@ jobs:
           set net:timeout 30
           set ftp:passive-mode true
           $TLS_SETTINGS
-          mirror --reverse --delete --verbose --parallel=4 dist/ "$TIMEWEB_FTP_REMOTE_PATH"
+          mirror --reverse --delete --verbose --parallel=1 dist/ "$TIMEWEB_FTP_REMOTE_PATH"
           bye
           EOF
