@@ -79,9 +79,39 @@ document.querySelectorAll<HTMLElement>('[data-services]').forEach((serviceBlock)
 document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
   const prevButton = document.querySelector<HTMLButtonElement>(`[data-rail-prev="${rail.id}"]`);
   const nextButton = document.querySelector<HTMLButtonElement>(`[data-rail-next="${rail.id}"]`);
+  const dotButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(`[data-rail-dots="${rail.id}"] button`),
+  );
+
+  const getMaxScroll = () => Math.max(0, rail.scrollWidth - rail.clientWidth);
+
+  const getDotTarget = (index: number) => {
+    const maxScroll = getMaxScroll();
+    if (dotButtons.length <= 1) return 0;
+    return (maxScroll / (dotButtons.length - 1)) * index;
+  };
+
+  const getActiveDotIndex = () => {
+    if (dotButtons.length <= 1) return 0;
+    const maxScroll = getMaxScroll();
+    if (maxScroll <= 2) return 0;
+    return Math.min(dotButtons.length - 1, Math.round((rail.scrollLeft / maxScroll) * (dotButtons.length - 1)));
+  };
+
+  const updateRailDots = () => {
+    const activeIndex = getActiveDotIndex();
+    const isScrollable = getMaxScroll() > 2;
+
+    dotButtons.forEach((dot, index) => {
+      const isActive = index === activeIndex;
+      dot.setAttribute('aria-current', String(isActive));
+      dot.disabled = !isScrollable;
+      dot.setAttribute('aria-disabled', String(!isScrollable));
+    });
+  };
 
   const updateRailButtons = () => {
-    const maxScroll = rail.scrollWidth - rail.clientWidth;
+    const maxScroll = getMaxScroll();
     const atStart = rail.scrollLeft <= 2;
     const atEnd = rail.scrollLeft >= maxScroll - 2;
     if (prevButton) {
@@ -92,12 +122,19 @@ document.querySelectorAll<HTMLElement>('[data-rail]').forEach((rail) => {
       nextButton.disabled = atEnd || maxScroll <= 2;
       nextButton.setAttribute('aria-disabled', String(atEnd || maxScroll <= 2));
     }
+    updateRailDots();
   };
 
   [prevButton, nextButton].forEach((button) => {
     button?.addEventListener('click', () => {
       const direction = button === nextButton ? 1 : -1;
       rail.scrollBy({ left: rail.clientWidth * 0.82 * direction, behavior: 'smooth' });
+    });
+  });
+
+  dotButtons.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      rail.scrollTo({ left: getDotTarget(index), behavior: 'smooth' });
     });
   });
 

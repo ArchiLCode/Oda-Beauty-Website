@@ -10,10 +10,23 @@ const { content } = Astro.props;
 
 <footer class="footer" id="contacts">
   <div class="container footer-grid">
-    <div class="footer-card glass">
-      <a class="footer-brand brand-wordmark" href="#main">O<span>Da</span></a>
+    <div class="footer-brand-block">
+      <a class="footer-brand" href="#main">
+        <span class="brand-wordmark">O<span>Da</span></span>
+        <small>Beauty Salon</small>
+      </a>
+      <p>Ваш салон красоты для сияния и уверенности. Премиальный уход, опытные мастера и безупречный результат каждый день.</p>
+      <div class="social-row">
+        {content.socials.filter((social) => ['vk', 'instagram', 'whatsapp'].includes(social.id)).map((social) => (
+          <a class="icon-link" href={social.url} target="_blank" rel="noreferrer" aria-label={social.label}>
+            <img src={social.icon.src} alt="" loading="lazy" />
+          </a>
+        ))}
+      </div>
+    </div>
+    <div class="footer-contacts">
+      <h2>Контакты</h2>
       <ul class="contact-list">
-        <li><strong>Контакты</strong></li>
         <li><a href={content.contacts.phoneHref}>{content.contacts.phone}</a></li>
         <li>
           <a href={content.contacts.mapUrl} target="_blank" rel="noreferrer">
@@ -22,25 +35,27 @@ const { content } = Astro.props;
         </li>
         <li>{content.contacts.hours}</li>
       </ul>
-      <div class="social-row">
-        {content.socials.map((social) => (
-          <a class="icon-link" href={social.url} target="_blank" rel="noreferrer" aria-label={social.label}>
-            <img src={social.icon.src} alt="" loading="lazy" />
-          </a>
-        ))}
-      </div>
-      <p class="legal">
-        Все цены на сайте носят информационный характер и не являются публичной офертой. Все права защищены © 2026.
-      </p>
+      <a class="button button--ghost footer-whatsapp" href={content.socials.find((social) => social.id === 'whatsapp')?.url} target="_blank" rel="noreferrer">
+        Написать в WhatsApp
+      </a>
     </div>
-    <div class="footer-card glass">
-      <h2 class="section-title footer-map-title">Мы на карте</h2>
+    <div class="footer-map">
+      <h2>Мы на карте</h2>
       <iframe
         class="map-frame"
         src={content.contacts.mapEmbedUrl}
         loading="lazy"
         title="ODa Beauty на карте"
       ></iframe>
+      <div class="footer-map-meta">
+        <p>{content.contacts.address}, {content.contacts.city}</p>
+        <p>{content.contacts.hours}</p>
+      </div>
     </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>© 2026 ODa Beauty Salon</span>
+    <a href="#main">Политика конфиденциальности</a>
+    <span>Сделано с любовью <span aria-hidden="true">♡</span></span>
   </div>
 </footer>

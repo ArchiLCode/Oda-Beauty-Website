@@ -6,17 +6,42 @@ interface Props {
 }
 
 const { content } = Astro.props;
+
+const benefits = [
+  {
+    text: 'Премиум материалы и стерильность',
+    icon: '<svg viewBox="0 0 24 24"><path d="M12 3.2 18.5 6v5.2c0 4.2-2.6 7.8-6.5 9.6-3.9-1.8-6.5-5.4-6.5-9.6V6L12 3.2Z"/><path d="M9 12.2l2 2 4-4"/></svg>',
+  },
+  {
+    text: 'Опытные мастера с заботой',
+    icon: '<svg viewBox="0 0 24 24"><path d="M9.8 11.2a3.8 3.8 0 1 0 0-7.6 3.8 3.8 0 0 0 0 7.6Z"/><path d="M3.8 20.4c.6-3.7 2.7-5.6 6-5.6 1.1 0 2 .2 2.8.6"/><path d="M17.6 20.3s-4-2.3-4-5.1a2.3 2.3 0 0 1 4-1.5 2.3 2.3 0 0 1 4 1.5c0 2.8-4 5.1-4 5.1Z"/></svg>',
+  },
+  {
+    text: 'Индивидуальный подход',
+    icon: '<svg viewBox="0 0 24 24"><path d="M12 4v5"/><path d="M12 15v5"/><path d="M4 12h5"/><path d="M15 12h5"/><path d="M8 8l2 2"/><path d="M16 16l-2-2"/><path d="M16 8l-2 2"/><path d="M8 16l2-2"/><circle cx="12" cy="12" r="2.4"/></svg>',
+  },
+  {
+    text: 'Уютная атмосфера и комфорт',
+    icon: '<svg viewBox="0 0 24 24"><path d="M12 20.4S4.5 16.1 4.5 10.9a4.1 4.1 0 0 1 7.5-2.3 4.1 4.1 0 0 1 7.5 2.3c0 5.2-7.5 9.5-7.5 9.5Z"/><path d="M8.7 12.8 12 9.9l3.3 2.9"/><path d="M10 12.2v3h4v-3"/></svg>',
+  },
+];
 ---
 
 <section class="hero" id="main">
-  <div class="container hero-grid">
+  <div class="hero-visual" aria-hidden="true">
+    <picture>
+      <source media="(max-width: 720px)" srcset={content.hero.mobileImage.src} />
+      <img src={content.hero.desktopImage.src} alt="" fetchpriority="high" />
+    </picture>
+  </div>
+  <div class="container hero-inner">
     <div class="hero-copy">
-      <h1 class="hero-title brand-wordmark">
-        O<span>Da</span>
-        <small>Beauty Salon</small>
+      <h1 class="hero-title">
+        Твоя красота —<br />
+        <span>наша</span> поддержка
       </h1>
       <p class="hero-lead">
-        Салон красоты в Смоленске, где маникюр, волосы, брови, ресницы и визаж собираются в спокойный персональный уход.
+        Профессиональный уход и безупречный результат для вашего сияния каждый день
       </p>
       <ul class="hero-services" aria-label="Услуги">
         {content.hero.services.map((service) => <li>{service}</li>)}
@@ -24,25 +49,15 @@ const { content } = Astro.props;
       <div class="hero-actions">
         <a class="button" href={content.hero.bookingUrl} target="_blank" rel="noreferrer">Записаться онлайн</a>
         <a class="button button--ghost" href="#services">Смотреть услуги</a>
-        <div class="hero-contact" aria-label="Контакты">
-          <a href={content.contacts.phoneHref}>{content.contacts.phone}</a>
-          <span>{content.contacts.city}, {content.contacts.address}</span>
-        </div>
       </div>
-      <a class="next-preview" href="#popular">Популярные услуги</a>
-    </div>
-    <div class="hero-media glass">
-      <picture>
-        <source media="(max-width: 720px)" srcset={content.hero.mobileImage.src} />
-        <img src={content.hero.desktopImage.src} alt={content.hero.desktopImage.alt} fetchpriority="high" />
-      </picture>
-      <div class="hero-media-card glass">
-        <p>Уютная атмосфера, аккуратная работа и запись онлайн в удобное время.</p>
-      </div>
+      <ul class="hero-benefits" aria-label="Преимущества">
+        {benefits.map((benefit) => (
+          <li>
+            <span aria-hidden="true" set:html={benefit.icon}></span>
+            {benefit.text}
+          </li>
+        ))}
+      </ul>
     </div>
   </div>
 </section>
-
-<div class="container brand-strip glass" aria-label="Бренды материалов">
-  {content.brands.map((brand) => <img src={brand.image.src} alt={brand.image.alt} loading="lazy" />)}
-</div>

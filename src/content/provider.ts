@@ -1,241 +1,34 @@
-import type {
-  BrandLogo,
-  GalleryImage,
-  ImageRef,
-  LandingContent,
-  ServiceCategory,
-  ServiceCategoryId,
-  ServiceItem,
-  TeamMember,
-} from './types';
+import { getSanityLandingContent } from './sanity/provider';
+import { getStaticLandingContent } from './static-provider';
+import type { LandingContent } from './types';
+import { validateLandingContent } from './validate';
 
-const img = (src: string, alt: string): ImageRef => ({ src, alt });
+type ContentSource = 'static' | 'sanity';
 
-const slugify = (value: string): string =>
-  value
-    .toLowerCase()
-    .replace(/ё/g, 'е')
-    .replace(/[^a-zа-я0-9]+/gi, '-')
-    .replace(/^-+|-+$/g, '');
+const getContentSource = (): ContentSource => {
+  const source = process.env.CONTENT_SOURCE ?? 'static';
 
-const service = (
-  categoryId: ServiceCategoryId,
-  title: string,
-  priceAndDuration: string,
-  imageSrc: string,
-  bookingUrl: string,
-  featured = false,
-): ServiceItem => {
-  const [price, duration = ''] = priceAndDuration.split(' • ');
+  if (source !== 'static' && source !== 'sanity') {
+    throw new Error(`Unsupported CONTENT_SOURCE "${source}". Expected "static" or "sanity".`);
+  }
 
-  return {
-    id: `${categoryId}-${slugify(title)}`,
-    categoryId,
-    title,
-    price,
-    duration,
-    bookingUrl,
-    image: img(`/${imageSrc}`, title),
-    featured,
-  };
+  return source;
 };
 
-const categories: ServiceCategory[] = [
-  { id: 'manicure', title: 'Маникюр', image: img('/img/filters/nails1.jpg', 'Маникюр ODa Beauty') },
-  { id: 'pedicure', title: 'Педикюр', image: img('/img/filters/pedicure.jpg', 'Педикюр ODa Beauty') },
-  { id: 'brows', title: 'Брови', image: img('/img/filters/brows.jpg', 'Оформление бровей ODa Beauty') },
-  { id: 'lashes', title: 'Ресницы', image: img('/img/filters/lashes.jpg', 'Наращивание ресниц ODa Beauty') },
-  { id: 'makeup', title: 'Визаж', image: img('/img/filters/makeup.jpg', 'Визаж ODa Beauty') },
-  { id: 'hair', title: 'Волосы', image: img('/img/filters/hair.jpg', 'Уход за волосами ODa Beauty') },
-  { id: 'men', title: 'Для мужчин', image: img('/img/filters/mans.jpg', 'Мужские услуги ODa Beauty') },
-];
+const assertValidContent = (content: LandingContent): LandingContent => {
+  const result = validateLandingContent(content);
 
-const services: ServiceItem[] = [
-  service('manicure', 'Маникюр с покрытием', 'от 1600 ₽ • 2 ч', 'img/services/manicure/manicure.jpg', 'https://dkd.su/1097816/s/10677855', true),
-  service('manicure', 'Маникюр + френч', 'от 1800 ₽ • 2 ч 15 м', 'img/services/manicure/french-manicure.jpg', 'https://dkd.su/1097816/s/10677899'),
-  service('manicure', 'Наращивание ногтей', 'от 2000 ₽ • 2 ч 30 м', 'img/services/manicure/extension.jpg', 'https://dkd.su/1097816/s/10677919', true),
-  service('manicure', 'Наращивание + френч', 'от 2200 ₽ • 3 ч', 'img/services/manicure/french-extension.jpg', 'https://dkd.su/1097816/s/10677841'),
-  service('manicure', 'Укрепление или коррекция ногтей', 'от 1800 ₽ • 2 ч 30 м', 'img/services/manicure/correction.jpg', 'https://dkd.su/1097816/s/10677835'),
-  service('manicure', 'Комбинированный маникюр', 'от 800 ₽ • 30 м', 'img/services/manicure/combi-manicure.jpg', 'https://dkd.su/1097816/s/10677395'),
-  service('manicure', 'SPA-маникюр', '300 ₽ • 20 м', 'img/services/manicure/spa-manicure.jpg', 'https://dkd.su/1097816/s/10677627'),
-  service('manicure', 'Дизайн ногтей', '200 ₽ • 15 м', 'img/services/manicure/nail-design.jpg', 'https://dkd.su/1097816/s/10677619'),
-  service('manicure', 'Покрытие обычным лаком', '200 ₽ • 30 м', 'img/services/manicure/default-cover.jpg', 'https://dkd.su/1097816/s/15427836'),
-  service('manicure', 'Ремонт, донаращивание ногтя', 'от 100 ₽ • 15 м', 'img/services/manicure/repair.jpg', 'https://dkd.su/1097816/s/10677583'),
-  service('manicure', 'Снятие чужого покрытия', '200 ₽ • 10 м', 'img/services/manicure/remove.jpg', 'https://dkd.su/1097816/s/15972796'),
-  service('pedicure', 'SMART педикюр (обработка пальчиков)', 'от 1400 ₽ • 40 м', 'img/services/pedicure/smart-toe.jpg', 'https://dkd.su/1097816/s/13926468'),
-  service('pedicure', 'SMART педикюр (обработка пальчиков + покрытие)', 'от 1600 ₽ • 1 ч 30 м', 'img/services/pedicure/smart-toe-cover.jpg', 'https://dkd.su/1097816/s/13926526'),
-  service('pedicure', 'SMART педикюр (обработка пальчиков и стоп)', 'от 1800 ₽ • 1 ч 15 м', 'img/services/pedicure/smart-toe-foot.jpg', 'https://dkd.su/1097816/s/13926502'),
-  service('pedicure', 'SMART педикюр (обработка пальчиков и стоп + покрытие)', 'от 2000 ₽ • 2 ч', 'img/services/pedicure/smart-full.jpg', 'https://dkd.su/1097816/s/13926502', true),
-  service('brows', 'Ботокс бровей', '500 ₽ • 10 м', 'img/services/brows/botox.jpg', 'https://dkd.su/1097816/s/16538782'),
-  service('brows', 'Ваксация носа', '300 ₽ • 5 м', 'img/services/brows/waxing-nose.jpg', 'https://dkd.su/1097816/s/16735108'),
-  service('brows', 'Веснушки', '100 ₽ • 10 м', 'img/services/brows/freckles.jpg', 'https://dkd.su/1097816/s/13960328'),
-  service('brows', 'Комплекс VIP', '1400 ₽ • 1 ч 20 м', 'img/services/brows/vip.jpg', 'https://dkd.su/1097816/s/10520576'),
-  service('brows', 'Комплекс стандарт', '800 ₽ • 45 м', 'img/services/brows/standart.jpg', 'https://dkd.su/1097816/s/13927236'),
-  service('brows', 'Коррекция бровей (воск/пинцет)', '500 ₽ • 30 м', 'img/services/brows/correction.jpg', 'https://dkd.su/1097816/s/10520560'),
-  service('brows', 'Ламинирование бровей', '1000 ₽ • 30 м', 'img/services/brows/lamination.jpg', 'https://dkd.su/1097816/s/10520572', true),
-  service('brows', 'Окрашивание бровей', '400 ₽ • 30 м', 'img/services/brows/coloring.jpg', 'https://dkd.su/1097816/s/13927236'),
-  service('brows', 'Окрашивание ресниц', '500 ₽ • 25 м', 'img/services/brows/lash-coloring.jpg', 'https://dkd.su/1097816/s/10520592'),
-  service('brows', 'Сложная коррекция (работа с полотном брови)', '700 ₽ • 45 м', 'img/services/brows/hard-correction.jpg', 'https://dkd.su/1097816/s/16330764'),
-  service('brows', 'Удаление пушка на подбородке', '200 ₽ • 5 м', 'img/services/brows/fuzz-chin.jpg', 'https://dkd.su/1097816/s/15316296'),
-  service('brows', 'Удаление пушка над губой', '300 ₽ • 10 м', 'img/services/brows/fuzz-lips.jpg', 'https://dkd.su/1097816/s/10622707'),
-  service('lashes', 'Ламинирование и окрашивание ресниц', '650 ₽ • 1 ч 30 м', 'img/services/lashes/lam-coloring.jpg', 'https://dkd.su/1097816/s/15267898'),
-  service('lashes', 'Комплекс ламинирование ресниц и бровей', '1200 ₽ • 2 ч 15 м', 'img/services/lashes/lashes-brow-lam.jpg', 'https://dkd.su/1097816/s/15267950'),
-  service('lashes', '1D Классика', 'от 1300 ₽ • 1 ч 30 м', 'img/services/lashes/1d.jpg', 'https://dkd.su/1097816/s/11044060'),
-  service('lashes', '4D', 'от 1800 ₽ • 2 ч 30 м', 'img/services/lashes/4d.jpg', 'https://dkd.su/1097816/s/15433970'),
-  service('lashes', '5D и более', 'от 2000 ₽ • 3 ч', 'img/services/lashes/5d.jpg', 'https://dkd.su/1097816/s/15433958'),
-  service('lashes', 'Мокрый эффект', '200 ₽ • 2 ч 30 м', 'img/services/lashes/wet.jpg', 'https://dkd.su/1097816/s/11045056'),
-  service('lashes', 'Объём 2D', 'от 1400 ₽ • 2 ч 30 м', 'img/services/lashes/2d.jpg', 'https://dkd.su/1097816/s/11044702'),
-  service('lashes', 'Объём 3D', 'от 1600 ₽ • 3 ч', 'img/services/lashes/3d.jpg', 'https://dkd.su/1097816/s/11045034', true),
-  service('lashes', 'Снятие наращенных ресниц', '300 ₽ • 30 м', 'img/services/lashes/removing.jpg', 'https://dkd.su/1097816/s/13926468'),
-  service('makeup', 'Макияж дневной/вечерний', 'от 2000 ₽ • 1 ч', 'img/services/makeup/makeup.jpg', 'https://dkd.su/1097816/s/18039488'),
-  service('makeup', 'Образ', 'от 3500 ₽ • 2 ч', 'img/services/makeup/look.jpg', 'https://dkd.su/1097816/s/18039566'),
-  service('makeup', 'Укладка', 'от 1500 ₽ • 1 ч', 'img/services/makeup/hair-styling.jpg', 'https://dkd.su/1097816/s/18039527'),
-  service('hair', 'Окрашивание в 1 тон', 'от 3000 ₽ • 2 ч', 'img/services/hair/coloring-1ton.jpg', 'https://dkd.su/1097816/s/15961494', true),
-  service('hair', 'Окрашивание корней', 'от 2500 ₽ • 2 ч', 'img/services/hair/coloring-root.jpg', 'https://dkd.su/1097816/s/15961474'),
-  service('hair', 'Сложное окрашивание (Аиртач, милирование, тотал блонд)', 'от 5000 ₽ • 1 ч', 'img/services/hair/hard-coloring.jpg', 'https://dkd.su/1097816/s/15961666'),
-  service('hair', 'Стрижка женская', '1000 ₽ • 1 ч', 'img/services/hair/haircut.jpg', 'https://dkd.su/1097816/s/15268036'),
-  service('hair', 'Стрижка кончиков (по прямой линии)', '600 ₽ • 30 м', 'img/services/hair/tips-coloring.jpg', 'https://dkd.su/1097816/s/15268072'),
-  service('hair', 'Стрижка чёлки', '500 ₽ • 20 м', 'img/services/hair/bang-haircut.jpg', 'https://dkd.su/1097816/s/15268052'),
-  service('hair', 'Тонирование волос', 'от 2500 ₽ • 1 ч', 'img/services/hair/hair-toner.jpg', 'https://dkd.su/1097816/s/15961672'),
-  service('hair', 'Укладка волос', 'от 1000 ₽ • 1 ч', 'img/services/hair/styling.jpg', 'https://dkd.su/1097816/s/16313710'),
-  service('hair', 'Холодное восстановление волос', '2000 ₽ • 1 ч 30 м', 'img/services/hair/cold-repair.jpg', 'https://dkd.su/1097816/s/15171082'),
-  service('men', 'Бритьё налысо', '400 ₽ • 30 м', 'img/services/mans/bald.jpg', 'https://dkd.su/1097816/s/13949690'),
-  service('men', 'Мужская коррекция бровей', '700 ₽ • 30 м', 'img/services/mans/brow-correction.jpg', 'https://dkd.su/1097816/s/10520598'),
-  service('men', 'Мужской маникюр', '800 ₽ • 30 м', 'img/services/mans/man-manicure.jpg', 'https://dkd.su/1097816/s/10677525'),
-  service('men', 'Мужской педикюр (обработка пальцев)', '1000 ₽ • 1 ч', 'img/services/mans/man-pedicure-toe.jpg', 'https://dkd.su/1097816/s/15330058'),
-  service('men', 'Мужской педикюр (обработка стоп)', '800 ₽ • 30 м', 'img/services/mans/man-pedicure-foot.jpg', 'https://dkd.su/1097816/s/15517666'),
-  service('men', 'Мужской педикюр (полный)', '1800 ₽ • 1 ч 30 м', 'img/services/mans/man-pedicure-full.jpg', 'https://dkd.su/1097816/s/15517656'),
-  service('men', 'Оформление бороды и усов', 'от 500 ₽ • 30 м', 'img/services/mans/beard.jpg', 'https://dkd.su/1097816/s/13949676'),
-  service('men', 'Стрижка мальчика (до 10 лет)', '700 ₽ • 40 м', 'img/services/mans/kids-haircut.jpg', 'https://dkd.su/1097816/s/13949726'),
-  service('men', 'Мужская стрижка', '900 ₽ • 40 м', 'img/services/mans/man-haircut.jpg', 'https://dkd.su/1097816/s/13944330'),
-  service('men', 'Мужская стрижка под одну или две насадки', '500 ₽ • 20 м', 'img/services/mans/man-haircut-1-2.jpg', 'https://dkd.su/1097816/s/13949706'),
-];
+  if (!result.valid) {
+    throw new Error(`Landing content validation failed:\n- ${result.errors.join('\n- ')}`);
+  }
 
-const team: TeamMember[] = [
-  { id: 'olga-davydova', name: 'Ольга Давыдова', role: 'Руководитель, топ мастер', bookingUrl: 'https://dikidi.ru/1097816?p=1.pi-mi&o=11&m=2827528', image: img('/img/team/olga.jpg', 'Ольга Давыдова') },
-  { id: 'anastasia-manzhur', name: 'Анастасия Манжур', role: 'Бровист, мастер мужских стрижек', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3145576', image: img('/img/team/nastya.jpg', 'Анастасия Манжур') },
-  { id: 'elizaveta-antonova', name: 'Елизавета Антонова', role: 'Мастер маникюра и педикюра', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3236168', image: img('/img/team/liza.jpg', 'Елизавета Антонова') },
-  { id: 'olesya-lapshinkina', name: 'Олеся Лапшинкина', role: 'Стилист по волосам', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3165026', image: img('/img/team/olesya.jpg', 'Олеся Лапшинкина') },
-  { id: 'marina-talanina', name: 'Марина Таланина', role: 'Стилист по волосам', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3145702', image: img('/img/team/marina.jpg', 'Марина Таланина') },
-  { id: 'olga-simchenkova', name: 'Ольга Симченкова', role: 'Топ мастер, инструктор по наращиванию ресниц', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3669946', image: img('/img/team/simchenkova.jpg', 'Ольга Симченкова') },
-  { id: 'anastasia-kavyndikova', name: 'Анастасия Кавындикова', role: 'Мастер по восстановлению волос', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=2568022', image: img('/img/team/kavindikova.jpg', 'Анастасия Кавындикова') },
-  { id: 'alexandra-mitrushina', name: 'Александра Митрушина', role: 'Визажист, стилист по прическам', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3684011', image: img('/img/team/mitrushina.jpg', 'Александра Митрушина') },
-  { id: 'janna-dmitrieva', name: 'Жанна Дмитриева', role: 'Бровист, ламимейкер', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3618473', image: img('/img/team/janna.jpg', 'Жанна Дмитриева') },
-  { id: 'vitalia-bondarenkova', name: 'Виталия Бондаренкова', role: 'Мастер по наращиванию ресниц', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3666489', image: img('/img/team/vita.jpg', 'Виталия Бондаренкова') },
-  { id: 'ksenia-moiseeva', name: 'Ксения Моисеева', role: 'Мастер маникюра и педикюра', bookingUrl: 'https://dikidi.app/1097816?p=3.pi-po-sm-ssm&o=1&m=3530763', image: img('/img/team/ksenia.jpg', 'Ксения Моисеева') },
-];
+  return content;
+};
 
-const gallery: GalleryImage[] = Array.from({ length: 14 }, (_, index) => ({
-  id: `gallery-${index + 1}`,
-  image: img(`/img/gallery/gallery${index + 1}.jpg`, `Работа и атмосфера ODa Beauty, фото ${index + 1}`),
-}));
+export const getLandingContent = async (): Promise<LandingContent> => {
+  const content = getContentSource() === 'sanity'
+    ? await getSanityLandingContent()
+    : getStaticLandingContent();
 
-const brands: BrandLogo[] = [
-  { id: 'np', name: 'NP', image: img('/img/brands/np.png', 'NP') },
-  { id: 'emi', name: 'EMI', image: img('/img/brands/emi.png', 'EMI') },
-  { id: 'loreal-paris', name: "L'Oreal Paris", image: img('/img/brands/loreal-paris.png', "L'Oreal Paris") },
-  { id: 'matrix', name: 'Matrix', image: img('/img/brands/matrix.png', 'Matrix') },
-];
-
-export const getLandingContent = (): LandingContent => ({
-  seo: {
-    title: 'Салон красоты ODa Beauty - Смоленск',
-    description:
-      'Салон красоты ODa Beauty в Смоленске: маникюр, педикюр, волосы, брови, ресницы, визаж и мужские услуги. Онлайн-запись, качественные материалы и внимательный сервис.',
-    canonicalUrl: 'https://oda-beauty.ru/',
-    keywords: [
-      'салон красоты Смоленск',
-      'ODa Beauty',
-      'маникюр Смоленск',
-      'педикюр Смоленск',
-      'брови Смоленск',
-      'ресницы Смоленск',
-      'парикмахерская Смоленск',
-    ],
-  },
-  nav: [
-    { label: 'Главная', href: '#main' },
-    { label: 'Популярные', href: '#popular' },
-    { label: 'О нас', href: '#about' },
-    { label: 'Услуги', href: '#services' },
-    { label: 'Галерея', href: '#gallery' },
-    { label: 'Команда', href: '#team' },
-    { label: 'Отзывы', href: '#reviews' },
-    { label: 'Контакты', href: '#contacts' },
-  ],
-  contacts: {
-    phone: '+7 (915) 639-89-88',
-    phoneHref: 'tel:+79156398988',
-    city: 'Смоленск',
-    address: 'ул. Багратиона 7',
-    mapUrl: 'https://yandex.ru/maps/-/CDfBIEnF',
-    mapEmbedUrl:
-      'https://yandex.ru/map-widget/v1/?um=constructor%3Af1588660d5f8367363d6524d006119960c10db8be9048dd6d358fc8327015753&source=constructor',
-    hours: 'Ежедневно, с 10:00 до 21:00',
-  },
-  socials: [
-    { id: 'vk', label: 'VK', url: 'https://vk.com/oda_beauty_salon', icon: img('/img/vk.svg', 'VK') },
-    { id: 'whatsapp', label: 'WhatsApp', url: 'https://wa.me/79156398988', icon: img('/img/whatsapp.svg', 'WhatsApp') },
-    {
-      id: 'instagram',
-      label: 'Instagram',
-      url: 'https://www.instagram.com/oda_beauty_salon?igsh=MTQxcWo2aDR2djc3Ng==',
-      icon: img('/img/inst.svg', 'Instagram'),
-    },
-    { id: 'map', label: 'Яндекс Карты', url: 'https://yandex.ru/maps/-/CDfBIEnF', icon: img('/img/ya-map.svg', 'Яндекс Карты') },
-  ],
-  brands,
-  hero: {
-    brand: 'ODa',
-    subtitle: 'Beauty Salon',
-    services: ['Маникюр', 'Волосы', 'Брови', 'Ресницы', 'Визаж'],
-    bookingUrl: 'https://beauty.dikidi.net/#widget=161842',
-    desktopImage: img('/img/oda_welcome.jpg', 'Интерьер салона красоты ODa Beauty'),
-    mobileImage: img('/img/oda_welcome_mobile.jpg', 'Интерьер салона красоты ODa Beauty'),
-  },
-  about: {
-    title: 'О нас',
-    text: [
-      'В ODa мы верим, что каждая женщина уникальна и заслуживает лучшего ухода. Наш стильный и уютный салон создан для того, чтобы вы могли наслаждаться моментами релаксации и заботы о себе.',
-      'Мы заботимся о внешней красоте, вашем здоровье и комфорте. В салоне индивидуальный подход к каждому клиенту, внимание к деталям и только качественные проверенные материалы от ведущих брендов.',
-    ],
-    image: img('/img/salon-mirrors.jpg', 'Интерьер ODa Beauty с рабочими местами мастеров'),
-  },
-  services: {
-    categories,
-    items: services,
-  },
-  team,
-  gallery,
-  reviews: {
-    rating: 5,
-    count: '201 отзыв',
-    externalUrl: 'https://dikidi.ru/1097816?p=1.pi-pr',
-    items: [
-      {
-        id: 'angelina',
-        author: 'Ангелина',
-        rating: 5,
-        text: 'Была в салоне в первый раз и мне безумно всё понравилось! Сервис на высочайшем уровне, приветливый персонал и мастера наивысшего уровня!',
-      },
-      {
-        id: 'olga',
-        author: 'Ольга',
-        rating: 5,
-        text: 'Очень уютный салон, замечательный мастер Елизавета, спасибо за положительную атмосферу и безупречно выполненный маникюр.',
-      },
-      {
-        id: 'julia',
-        author: 'Юлия',
-        rating: 5,
-        text: 'Анастасия имеет огромный опыт работы, всегда тактична и мила. Спасибо за прекрасные брови!',
-      },
-      {
-        id: 'mary',
-        author: 'Мэри',
-        rating: 5,
-        text: 'Огромное спасибо мастеру Марине за проделанную работу. Выполнила все мои пожелания, однозначно вернусь к ней еще.',
-      },
-    ],
-  },
-});
+  return assertValidContent(content);
+};

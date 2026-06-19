@@ -1,0 +1,85 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  repository_dispatch:
+    types: [sanity-publish]
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
+      SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
+      SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
+      TIMEWEB_HOST: ${{ secrets.TIMEWEB_HOST }}
+      TIMEWEB_PORT: ${{ secrets.TIMEWEB_PORT }}
+      TIMEWEB_USER: ${{ secrets.TIMEWEB_USER }}
+      TIMEWEB_REMOTE_PATH: ${{ secrets.TIMEWEB_REMOTE_PATH }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify static fallback
+        run: npm run verify
+        env:
+          CONTENT_SOURCE: static
+
+      - name: Build published Sanity content
+        run: npm run build
+        env:
+          CONTENT_SOURCE: sanity
+
+      - name: Validate deploy configuration
+        env:
+          TIMEWEB_SSH_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+        run: |
+          for name in TIMEWEB_HOST TIMEWEB_PORT TIMEWEB_USER TIMEWEB_REMOTE_PATH TIMEWEB_SSH_KEY; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing required secret: $name" >&2
+              exit 1
+            fi
+          done
+          if [[ ! "$TIMEWEB_PORT" =~ ^[0-9]+$ ]]; then
+            echo "TIMEWEB_PORT must be numeric." >&2
+            exit 1
+          fi
+          if [[ "$TIMEWEB_REMOTE_PATH" != /* || "$TIMEWEB_REMOTE_PATH" == "/" ]]; then
+            echo "TIMEWEB_REMOTE_PATH must be an absolute non-root directory." >&2
+            exit 1
+          fi
+
+      - name: Configure SSH
+        env:
+          TIMEWEB_SSH_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$TIMEWEB_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "$TIMEWEB_PORT" "$TIMEWEB_HOST" >> ~/.ssh/known_hosts
+
+      - name: Deploy to Timeweb
+        run: |
+          rsync -az --delete \
+            -e "ssh -p $TIMEWEB_PORT" \
+            dist/ "$TIMEWEB_USER@$TIMEWEB_HOST:$TIMEWEB_REMOTE_PATH/"

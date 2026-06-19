@@ -10,19 +10,22 @@ const { content } = Astro.props;
 
 <section class="section" id="about">
   <div class="container about-grid">
-    <div class="about-media glass">
+    <div class="about-media">
       <img src={content.about.image.src} alt={content.about.image.alt} loading="lazy" />
+      <button class="play-button" type="button" aria-label="Смотреть видео о салоне">
+        <span aria-hidden="true"></span>
+      </button>
     </div>
     <div class="about-copy">
       <div class="section-heading">
-        <p class="section-kicker">Атмосфера ODa</p>
-        <h2 class="section-title">{content.about.title}</h2>
+        <p class="section-kicker">О нас</p>
+        <h2 class="section-title">Место, где заботятся о вашей <span>красоте</span></h2>
       </div>
       {content.about.text.map((paragraph) => <p>{paragraph}</p>)}
-      <ul class="hero-services">
-        <li>Качественные материалы</li>
-        <li>Индивидуальный подход</li>
-        <li>Онлайн-запись</li>
+      <ul class="stats-row" aria-label="ODa Beauty в цифрах">
+        <li><strong>6+</strong><span>лет опыта</span></li>
+        <li><strong>1500+</strong><span>довольных клиентов</span></li>
+        <li><strong>20+</strong><span>услуг для вас</span></li>
       </ul>
     </div>
   </div>

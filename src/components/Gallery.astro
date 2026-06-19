@@ -10,17 +10,26 @@ const { content } = Astro.props;
 
 <section class="section section--tight" id="gallery">
   <div class="container">
-    <div class="section-heading">
-      <p class="section-kicker">Работы и детали</p>
-      <h2 class="section-title">Галерея</h2>
-      <p class="section-copy">Фото работ и атмосферы салона помогают почувствовать стиль ODa до первого визита.</p>
+    <div class="section-heading section-heading--row">
+      <h2 class="section-title">Галерея работ</h2>
+      <a class="button button--ghost button--small" href={content.socials.find((social) => social.id === 'instagram')?.url} target="_blank" rel="noreferrer">Смотреть все</a>
     </div>
-    <div class="gallery-grid">
-      {content.gallery.slice(0, 9).map((item) => (
+    <div class="media-rail-wrap">
+      <button class="rail-button rail-button--floating rail-button--left" type="button" data-rail-prev="gallery-rail" aria-label="Предыдущие работы">‹</button>
+      <div class="gallery-grid" data-rail id="gallery-rail">
+        {content.gallery.map((item) => (
         <figure class="gallery-card card">
           <img src={item.image.src} alt={item.image.alt} loading="lazy" />
         </figure>
-      ))}
+        ))}
+      </div>
+      <button class="rail-button rail-button--floating rail-button--right" type="button" data-rail-next="gallery-rail" aria-label="Следующие работы">›</button>
+      <div class="rail-dots" data-rail-dots="gallery-rail" aria-label="Навигация галереи">
+        <button type="button" aria-label="Показать слайд 1" aria-current="true"></button>
+        <button type="button" aria-label="Показать слайд 2"></button>
+        <button type="button" aria-label="Показать слайд 3"></button>
+        <button type="button" aria-label="Показать слайд 4"></button>
+      </div>
     </div>
   </div>
 </section>

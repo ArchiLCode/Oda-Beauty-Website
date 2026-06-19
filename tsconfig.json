@@ -5,7 +5,15 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "node"]
   },
-  "include": ["src", "tests", "astro.config.mjs"]
+  "include": [
+    "src",
+    "tests",
+    "scripts",
+    "studio",
+    "astro.config.mjs",
+    "sanity.config.ts",
+    "sanity.cli.ts"
+  ]
 }

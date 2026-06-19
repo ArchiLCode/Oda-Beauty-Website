@@ -7,31 +7,42 @@ interface Props {
 
 const { content } = Astro.props;
 const stars = '★★★★★';
+const reviewDates = ['12 ноя 2025', '9 ноя 2025', '7 ноя 2025'];
 ---
 
-<section class="section" id="reviews">
-  <div class="container">
-    <div class="section-heading center">
-      <p class="section-kicker">Отзывы</p>
-      <h2 class="section-title">Гости возвращаются</h2>
-      <p class="section-copy">Сохранили отзывы из текущей версии и вывели общий рейтинг DIKIDI отдельным стеклянным блоком.</p>
+<section class="section section--compact" id="reviews">
+  <div class="container panel-section reviews-panel">
+    <div class="section-heading section-heading--row">
+      <h2 class="section-title">Отзывы наших клиентов</h2>
+      <a class="button button--ghost button--small" href={content.reviews.externalUrl} target="_blank" rel="noreferrer">Смотреть все</a>
     </div>
-    <div class="rating-panel glass">
-      <div class="rating-value">{content.reviews.rating.toFixed(1)}</div>
-      <div>
-        <div class="stars" aria-label={`Рейтинг ${content.reviews.rating} из 5`}>{stars}</div>
-        <strong>Наш рейтинг в DIKIDI</strong>
-      </div>
-      <a class="button button--ghost" href={content.reviews.externalUrl} target="_blank" rel="noreferrer">{content.reviews.count}</a>
-    </div>
-    <div class="review-grid">
-      {content.reviews.items.map((review) => (
-        <article class="review-card glass">
-          <div class="stars" aria-hidden="true">{stars}</div>
-          <h3>{review.author}</h3>
-          <p>{review.text}</p>
+    <div class="media-rail-wrap">
+      <button class="rail-button rail-button--floating rail-button--left review-rail-button" type="button" data-rail-prev="reviews-rail" aria-label="Предыдущий отзыв">‹</button>
+      <div class="review-grid" data-rail id="reviews-rail">
+        <article class="rating-card card">
+          <p>Наш рейтинг в 2GIS</p>
+          <div class="rating-value">{content.reviews.rating.toFixed(1)}</div>
+          <div class="stars" aria-label={`Рейтинг ${content.reviews.rating} из 5`}>{stars}</div>
+          <span>{content.reviews.count}</span>
         </article>
-      ))}
+        {content.reviews.items.slice(0, 3).map((review, index) => (
+          <article class="review-card card">
+            <header>
+              <div class="stars" aria-hidden="true">{stars}</div>
+              <span class="review-score">{review.rating.toFixed(1)}</span>
+              <h3>{review.author}</h3>
+            </header>
+            <p>{review.text}</p>
+            <time>{reviewDates[index]}</time>
+          </article>
+        ))}
+      </div>
+      <button class="rail-button rail-button--floating rail-button--right review-rail-button" type="button" data-rail-next="reviews-rail" aria-label="Следующий отзыв">›</button>
+      <div class="rail-dots review-dots" data-rail-dots="reviews-rail" aria-label="Навигация отзывов">
+        <button type="button" aria-label="Показать отзыв 1" aria-current="true"></button>
+        <button type="button" aria-label="Показать отзыв 2"></button>
+        <button type="button" aria-label="Показать отзыв 3"></button>
+      </div>
     </div>
   </div>
 </section>

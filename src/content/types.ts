@@ -1,11 +1,4 @@
-export type ServiceCategoryId =
-  | 'manicure'
-  | 'pedicure'
-  | 'brows'
-  | 'lashes'
-  | 'makeup'
-  | 'hair'
-  | 'men';
+export type ServiceCategoryId = string;
 
 export interface ImageRef {
   src: string;

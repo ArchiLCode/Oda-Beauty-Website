@@ -11,7 +11,7 @@ import Team from '../components/Team.astro';
 import { getLandingContent } from '../content/provider';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
-const content = getLandingContent();
+const content = await getLandingContent();
 ---
 
 <BaseLayout content={content}>
