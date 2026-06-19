@@ -40,14 +40,16 @@ Add these repository secrets:
 | `SANITY_PROJECT_ID` | Sanity project id |
 | `SANITY_DATASET` | `production` |
 | `SANITY_READ_TOKEN` | Empty for a public dataset; Viewer token for a private dataset |
-| `TIMEWEB_HOST` | SSH/SFTP hostname |
-| `TIMEWEB_PORT` | SSH port, usually `22` |
-| `TIMEWEB_USER` | SSH user |
-| `TIMEWEB_SSH_KEY` | Private deploy key |
-| `TIMEWEB_REMOTE_PATH` | Absolute public directory for the domain |
+| `TIMEWEB_FTP_HOST` | FTP hostname from the Timeweb control panel, for example `vh428.timeweb.ru` |
+| `TIMEWEB_FTP_PORT` | FTP/FTPS port, usually `21` |
+| `TIMEWEB_FTP_USER` | FTP user from the Timeweb control panel |
+| `TIMEWEB_FTP_PASSWORD` | FTP password |
+| `TIMEWEB_FTP_PROTOCOL` | `ftps` when explicit TLS is available; otherwise `ftp` |
+| `TIMEWEB_FTP_REMOTE_PATH` | Absolute FTP path to the domain's public directory; never `/` |
 
-Install the matching public SSH key in Timeweb. The workflow verifies the static fallback, builds the
-published Sanity content, and synchronizes `dist/` with `rsync --delete`.
+The workflow verifies the static fallback, builds the published Sanity content, installs `lftp`, and
+mirrors `dist/` into the target directory while deleting stale remote files. With `ftps`, TLS and
+certificate verification are mandatory. Plain `ftp` must be selected explicitly because it is not encrypted.
 
 ## 4. Configure the publish webhook
 

@@ -22,10 +22,12 @@ jobs:
       SANITY_PROJECT_ID: ${{ secrets.SANITY_PROJECT_ID }}
       SANITY_DATASET: ${{ secrets.SANITY_DATASET }}
       SANITY_READ_TOKEN: ${{ secrets.SANITY_READ_TOKEN }}
-      TIMEWEB_HOST: ${{ secrets.TIMEWEB_HOST }}
-      TIMEWEB_PORT: ${{ secrets.TIMEWEB_PORT }}
-      TIMEWEB_USER: ${{ secrets.TIMEWEB_USER }}
-      TIMEWEB_REMOTE_PATH: ${{ secrets.TIMEWEB_REMOTE_PATH }}
+      TIMEWEB_FTP_HOST: ${{ secrets.TIMEWEB_FTP_HOST }}
+      TIMEWEB_FTP_PORT: ${{ secrets.TIMEWEB_FTP_PORT }}
+      TIMEWEB_FTP_USER: ${{ secrets.TIMEWEB_FTP_USER }}
+      TIMEWEB_FTP_PASSWORD: ${{ secrets.TIMEWEB_FTP_PASSWORD }}
+      TIMEWEB_FTP_PROTOCOL: ${{ secrets.TIMEWEB_FTP_PROTOCOL }}
+      TIMEWEB_FTP_REMOTE_PATH: ${{ secrets.TIMEWEB_FTP_REMOTE_PATH }}
 
     steps:
       - name: Checkout
@@ -50,36 +52,46 @@ jobs:
         env:
           CONTENT_SOURCE: sanity
 
-      - name: Validate deploy configuration
-        env:
-          TIMEWEB_SSH_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+      - name: Install FTP client
         run: |
-          for name in TIMEWEB_HOST TIMEWEB_PORT TIMEWEB_USER TIMEWEB_REMOTE_PATH TIMEWEB_SSH_KEY; do
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Validate deploy configuration
+        run: |
+          for name in TIMEWEB_FTP_HOST TIMEWEB_FTP_PORT TIMEWEB_FTP_USER TIMEWEB_FTP_PASSWORD TIMEWEB_FTP_PROTOCOL TIMEWEB_FTP_REMOTE_PATH; do
             if [[ -z "${!name:-}" ]]; then
               echo "Missing required secret: $name" >&2
               exit 1
             fi
           done
-          if [[ ! "$TIMEWEB_PORT" =~ ^[0-9]+$ ]]; then
-            echo "TIMEWEB_PORT must be numeric." >&2
+          if [[ ! "$TIMEWEB_FTP_PORT" =~ ^[0-9]+$ ]] || (( TIMEWEB_FTP_PORT < 1 || TIMEWEB_FTP_PORT > 65535 )); then
+            echo "TIMEWEB_FTP_PORT must be a valid numeric port." >&2
             exit 1
           fi
-          if [[ "$TIMEWEB_REMOTE_PATH" != /* || "$TIMEWEB_REMOTE_PATH" == "/" ]]; then
-            echo "TIMEWEB_REMOTE_PATH must be an absolute non-root directory." >&2
+          if [[ ! "$TIMEWEB_FTP_PROTOCOL" =~ ^(ftp|ftps)$ ]]; then
+            echo "TIMEWEB_FTP_PROTOCOL must be ftp|ftps." >&2
+            exit 1
+          fi
+          if [[ "$TIMEWEB_FTP_REMOTE_PATH" == "/" || ! "$TIMEWEB_FTP_REMOTE_PATH" =~ ^/[A-Za-z0-9._/-]+$ ]]; then
+            echo "TIMEWEB_FTP_REMOTE_PATH must be a safe absolute non-root directory." >&2
             exit 1
           fi
 
-      - name: Configure SSH
-        env:
-          TIMEWEB_SSH_KEY: ${{ secrets.TIMEWEB_SSH_KEY }}
+      - name: Deploy to Timeweb over FTP
         run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$TIMEWEB_SSH_KEY" > ~/.ssh/id_ed25519
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -p "$TIMEWEB_PORT" "$TIMEWEB_HOST" >> ~/.ssh/known_hosts
+          if [[ "$TIMEWEB_FTP_PROTOCOL" == "ftps" ]]; then
+            TLS_SETTINGS=$'set ftp:ssl-force true\nset ftp:ssl-protect-data true\nset ssl:verify-certificate yes'
+          else
+            TLS_SETTINGS=$'set ftp:ssl-force false\nset ftp:ssl-allow false'
+          fi
 
-      - name: Deploy to Timeweb
-        run: |
-          rsync -az --delete \
-            -e "ssh -p $TIMEWEB_PORT" \
-            dist/ "$TIMEWEB_USER@$TIMEWEB_HOST:$TIMEWEB_REMOTE_PATH/"
+          lftp -u "$TIMEWEB_FTP_USER","$TIMEWEB_FTP_PASSWORD" "ftp://$TIMEWEB_FTP_HOST:$TIMEWEB_FTP_PORT" <<EOF
+          set cmd:fail-exit yes
+          set net:max-retries 2
+          set net:timeout 30
+          set ftp:passive-mode true
+          $TLS_SETTINGS
+          mirror --reverse --delete --verbose --parallel=4 dist/ "$TIMEWEB_FTP_REMOTE_PATH"
+          bye
+          EOF
