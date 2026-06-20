@@ -1,0 +1,42 @@
+---
+import type { SocialLink } from '../content/types';
+
+interface Props {
+  id: string;
+  socials: SocialLink[];
+  placement?: 'header' | 'mobile' | 'footer';
+}
+
+const { id, socials, placement = 'header' } = Astro.props;
+const menuId = `social-menu-${id}`;
+---
+
+<div class:list={['social-menu', `social-menu--${placement}`]} data-social-menu data-open="false">
+  <button
+    class="social-menu__trigger"
+    type="button"
+    aria-expanded="false"
+    aria-haspopup="menu"
+    aria-controls={menuId}
+    data-social-menu-trigger
+  >
+    <span>Соцсети</span>
+    <svg viewBox="0 0 12 8" aria-hidden="true">
+      <path d="m1 1 5 5 5-5"></path>
+    </svg>
+  </button>
+  <div
+    class="social-menu__popover glass"
+    id={menuId}
+    role="menu"
+    aria-hidden="true"
+    inert
+    data-social-menu-popover
+  >
+    {socials.map((social) => (
+      <a href={social.url} target="_blank" rel="noreferrer" role="menuitem" data-social-menu-link>
+        {social.label}
+      </a>
+    ))}
+  </div>
+</div>

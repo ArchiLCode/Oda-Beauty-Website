@@ -120,7 +120,7 @@ const buildDocuments = async () => {
     socials: content.socials.map((social) => ({
       ...keyed(social),
       _type: 'socialLink',
-      icon: { _type: 'localImageRef', ...social.icon },
+      ...(social.icon ? { icon: { _type: 'localImageRef', ...social.icon } } : {}),
     })),
     hero: {
       _type: 'heroSection',

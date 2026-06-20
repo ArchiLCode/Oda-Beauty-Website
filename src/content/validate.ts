@@ -141,10 +141,10 @@ export const validateLandingContent = (content: LandingContent): ContentValidati
     if (!hasUrl(social.url)) {
       errors.push(`Social link "${social.label}" is missing url.`);
     }
-    if (!hasText(social.icon?.src)) {
+    if (social.icon && !hasText(social.icon.src)) {
       errors.push(`Social link "${social.label}" is missing icon source.`);
     }
-    if (!hasText(social.icon?.alt)) {
+    if (social.icon && !hasText(social.icon.alt)) {
       errors.push(`Social link "${social.label}" is missing icon alt text.`);
     }
   }

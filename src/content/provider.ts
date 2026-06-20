@@ -1,4 +1,5 @@
 import { getSanityLandingContent } from './sanity/provider';
+import { normalizeSocialLinks } from './social-links';
 import { getStaticLandingContent } from './static-provider';
 import type { LandingContent } from './types';
 import { validateLandingContent } from './validate';
@@ -30,5 +31,8 @@ export const getLandingContent = async (): Promise<LandingContent> => {
     ? await getSanityLandingContent()
     : getStaticLandingContent();
 
-  return assertValidContent(content);
+  return assertValidContent({
+    ...content,
+    socials: normalizeSocialLinks(content.socials),
+  });
 };

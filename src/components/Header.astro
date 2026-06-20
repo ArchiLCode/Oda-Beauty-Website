@@ -1,12 +1,12 @@
 ---
 import type { LandingContent } from '../content/types';
+import SocialMenu from './SocialMenu.astro';
 
 interface Props {
   content: LandingContent;
 }
 
 const { content } = Astro.props;
-const visibleSocials = content.socials.filter((social) => ['vk', 'instagram', 'whatsapp', 'map'].includes(social.id));
 ---
 
 <header class="site-header">
@@ -19,11 +19,14 @@ const visibleSocials = content.socials.filter((social) => ['vk', 'instagram', 'w
       <span class="brand-wordmark">O<span>Da</span></span>
       <small>Beauty Salon</small>
     </a>
-    <a class="mobile-phone-link" href={content.contacts.phoneHref} aria-label={`Позвонить ${content.contacts.phone}`}>
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7.1 4.8 8.9 4c.8-.3 1.7.1 2 .9l.8 2.1c.3.7.1 1.4-.5 1.9l-.9.7a10.6 10.6 0 0 0 4.1 4.1l.7-.9c.5-.6 1.2-.8 1.9-.5l2.1.8c.8.3 1.2 1.2.9 2l-.8 1.8c-.4.8-1.2 1.3-2.1 1.2C10.8 17.5 6.5 13.2 5.9 7c-.1-.9.4-1.8 1.2-2.2Z" />
-      </svg>
-    </a>
+    <div class="mobile-actions">
+      <SocialMenu id="header-mobile" socials={content.socials} placement="mobile" />
+      <a class="mobile-phone-link" href={content.contacts.phoneHref} aria-label={`Позвонить ${content.contacts.phone}`}>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7.1 4.8 8.9 4c.8-.3 1.7.1 2 .9l.8 2.1c.3.7.1 1.4-.5 1.9l-.9.7a10.6 10.6 0 0 0 4.1 4.1l.7-.9c.5-.6 1.2-.8 1.9-.5l2.1.8c.8.3 1.2 1.2.9 2l-.8 1.8c-.4.8-1.2 1.3-2.1 1.2C10.8 17.5 6.5 13.2 5.9 7c-.1-.9.4-1.8 1.2-2.2Z" />
+        </svg>
+      </a>
+    </div>
     <nav class="desktop-nav" aria-label="Основная навигация">
       {content.nav.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
@@ -32,11 +35,7 @@ const visibleSocials = content.socials.filter((social) => ['vk', 'instagram', 'w
       <a class="header-address" href={content.contacts.mapUrl} target="_blank" rel="noreferrer">
         {content.contacts.city},<br />{content.contacts.address}
       </a>
-      {visibleSocials.slice(0, 4).map((social) => (
-        <a class="icon-link" href={social.url} target="_blank" rel="noreferrer" aria-label={social.label}>
-          <img src={social.icon.src} alt="" loading="lazy" />
-        </a>
-      ))}
+      <SocialMenu id="header" socials={content.socials} />
     </div>
   </div>
 </header>

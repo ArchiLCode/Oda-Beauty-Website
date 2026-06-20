@@ -972,7 +972,7 @@
             "type": "inline",
             "name": "localImageRef"
           },
-          "optional": false
+          "optional": true
         }
       }
     }

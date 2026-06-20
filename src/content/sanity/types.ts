@@ -17,7 +17,7 @@ export interface SanityLandingDocument {
     id: string;
     label: string;
     url: string;
-    icon: ImageRef;
+    icon?: ImageRef;
   }>;
   hero: {
     brand: string;

@@ -631,28 +631,26 @@ export const getStaticLandingContent = (): LandingContent => ({
   },
   socials: [
     {
+      id: "telegram",
+      label: "Telegram",
+      url: "https://t.me/ODaBEAUTY67",
+    },
+    {
+      id: "max",
+      label: "MAX",
+      url: "https://max.ru/u/f9LHodD0cOIr4yL7s62OCtJ3BdiKi48kTig1NkLU2dUBkMx21sBL02sRETs",
+    },
+    {
       id: "vk",
       label: "VK",
       url: "https://vk.com/oda_beauty_salon",
       icon: img("/img/vk.svg", "VK"),
     },
     {
-      id: "whatsapp",
-      label: "WhatsApp",
-      url: "https://wa.me/79156398988",
-      icon: img("/img/whatsapp.svg", "WhatsApp"),
-    },
-    {
       id: "instagram",
       label: "Instagram",
       url: "https://www.instagram.com/oda_beauty_salon?igsh=MTQxcWo2aDR2djc3Ng==",
       icon: img("/img/inst.svg", "Instagram"),
-    },
-    {
-      id: "map",
-      label: "Яндекс Карты",
-      url: "https://yandex.ru/maps/-/CDfBIEnF",
-      icon: img("/img/ya-map.svg", "Яндекс Карты"),
     },
   ],
   brands,

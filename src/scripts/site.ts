@@ -1,3 +1,43 @@
+const socialMenus = Array.from(document.querySelectorAll<HTMLElement>('[data-social-menu]'));
+
+const setSocialMenuOpen = (menu: HTMLElement, open: boolean, restoreFocus = false) => {
+  const trigger = menu.querySelector<HTMLButtonElement>('[data-social-menu-trigger]');
+  const popover = menu.querySelector<HTMLElement>('[data-social-menu-popover]');
+  if (!trigger || !popover) return;
+
+  menu.dataset.open = String(open);
+  trigger.setAttribute('aria-expanded', String(open));
+  popover.setAttribute('aria-hidden', String(!open));
+  popover.toggleAttribute('inert', !open);
+  if (restoreFocus) trigger.focus();
+};
+
+const closeSocialMenus = (except?: HTMLElement) => {
+  socialMenus.forEach((menu) => {
+    if (menu !== except) setSocialMenuOpen(menu, false);
+  });
+};
+
+socialMenus.forEach((menu) => {
+  const trigger = menu.querySelector<HTMLButtonElement>('[data-social-menu-trigger]');
+
+  trigger?.addEventListener('click', () => {
+    const willOpen = menu.dataset.open !== 'true';
+    closeSocialMenus(willOpen ? menu : undefined);
+    setSocialMenuOpen(menu, willOpen);
+  });
+
+  menu.querySelectorAll<HTMLAnchorElement>('[data-social-menu-link]').forEach((link) => {
+    link.addEventListener('click', () => setSocialMenuOpen(menu, false));
+  });
+});
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof Node)) return;
+  if (socialMenus.every((menu) => !menu.contains(target))) closeSocialMenus();
+});
+
 const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
 const mobileMenu = document.querySelector<HTMLElement>('[data-mobile-menu]');
 const menuLabel = toggle?.querySelector<HTMLElement>('.sr-only');
@@ -23,6 +63,9 @@ document.querySelectorAll<HTMLAnchorElement>('[data-menu-link]').forEach((link) 
 
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
+    socialMenus.forEach((menu) => {
+      if (menu.dataset.open === 'true') setSocialMenuOpen(menu, false, true);
+    });
     setMenuOpen(false);
   }
 });

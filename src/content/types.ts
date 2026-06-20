@@ -9,7 +9,7 @@ export interface SocialLink {
   id: string;
   label: string;
   url: string;
-  icon: ImageRef;
+  icon?: ImageRef;
 }
 
 export interface BrandLogo {

@@ -78,7 +78,7 @@ export const socialLink = defineType({
       type: 'url',
       validation: (Rule) => Rule.required().uri({ scheme: ['http', 'https'] }),
     }),
-    defineField({ name: 'icon', title: 'Иконка', type: 'localImageRef', validation: (Rule) => Rule.required() }),
+    defineField({ name: 'icon', title: 'Иконка', type: 'localImageRef' }),
   ],
   preview: { select: { title: 'label', subtitle: 'url' } },
 });
