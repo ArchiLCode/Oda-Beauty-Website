@@ -82,4 +82,15 @@ describe('jobs page source integration', () => {
     expect(jobsImportScript).not.toContain("_type: 'jobVacancy'");
     expect(jobsImportScript).not.toContain('toSanityDocumentId');
   });
+
+  it('renders popular services from the CMS-managed featured flag', () => {
+    const popularServices = readSource('../src/components/PopularServices.astro');
+    const serviceSchema = readSource('../studio/schemaTypes/documents.ts');
+    const sanityQuery = readSource('../src/content/sanity/query.ts');
+
+    expect(serviceSchema).toContain("name: 'featured'");
+    expect(sanityQuery).toContain('featured,');
+    expect(popularServices).toContain('service.featured');
+    expect(popularServices).not.toContain('popularTitles');
+  });
 });
