@@ -7,9 +7,9 @@ import {
   type IdentifiedSanityDocumentStub,
   type SanityClient,
 } from '@sanity/client';
-import { getStaticLandingContent } from '../src/content/static-provider';
+import { getStaticJobsPageContent, getStaticLandingContent } from '../src/content/static-provider';
 import type { ImageRef } from '../src/content/types';
-import { validateLandingContent } from '../src/content/validate';
+import { validateJobsPageContent, validateLandingContent } from '../src/content/validate';
 import { toSanityDocumentId } from './sanity-id';
 
 const apiVersion = '2026-06-18';
@@ -40,6 +40,12 @@ const content = getStaticLandingContent();
 const validation = validateLandingContent(content);
 if (!validation.valid) {
   throw new Error(`Static content validation failed:\n- ${validation.errors.join('\n- ')}`);
+}
+
+const jobsContent = getStaticJobsPageContent();
+const jobsValidation = validateJobsPageContent(jobsContent);
+if (!jobsValidation.valid) {
+  throw new Error(`Static jobs content validation failed:\n- ${jobsValidation.errors.join('\n- ')}`);
 }
 
 const { items: reviewItems, ...reviewSummary } = content.reviews;
@@ -136,6 +142,34 @@ const buildDocuments = async () => {
     reviews: { _type: 'reviewSummary', ...reviewSummary },
   };
 
+  const jobsPage = {
+    _id: 'jobsPage',
+    _type: 'jobsPage',
+    seo: { _type: 'seo', ...jobsContent.page.seo },
+    hero: {
+      _type: 'object',
+      ...jobsContent.page.hero,
+      image: await uploadImage(client, jobsContent.page.hero.image),
+    },
+    benefits: jobsContent.page.benefits.map((benefit, index) => ({
+      _key: benefit.id,
+      _type: 'object',
+      ...benefit,
+      order: (index + 1) * 10,
+    })),
+    workBenefits: jobsContent.page.workBenefits.map((benefit, index) => ({
+      _key: benefit.id,
+      _type: 'object',
+      ...benefit,
+      order: (index + 1) * 10,
+    })),
+    resumeCta: {
+      _type: 'object',
+      ...jobsContent.page.resumeCta,
+      image: await uploadImage(client, jobsContent.page.resumeCta.image),
+    },
+  };
+
   const categories = await mapSequentially(
     content.services.categories,
     async (category, index) => ({
@@ -212,7 +246,35 @@ const buildDocuments = async () => {
     order: (index + 1) * 10,
   }));
 
-  return [landingPage, ...categories, ...services, ...team, ...gallery, ...brands, ...reviews];
+  const vacancies = await mapSequentially(
+    jobsContent.vacancies,
+    async (vacancy, index) => ({
+      _id: toSanityDocumentId('jobVacancy', vacancy.id),
+      _type: 'jobVacancy',
+      id: vacancy.id,
+      title: vacancy.title,
+      salary: vacancy.salary,
+      experience: vacancy.experience,
+      requirements: vacancy.requirements,
+      applicationUrl: vacancy.applicationUrl,
+      buttonLabel: vacancy.buttonLabel,
+      published: vacancy.published ?? true,
+      image: await uploadImage(client, vacancy.image),
+      order: vacancy.order ?? (index + 1) * 10,
+    }),
+  );
+
+  return [
+    landingPage,
+    jobsPage,
+    ...categories,
+    ...services,
+    ...team,
+    ...gallery,
+    ...brands,
+    ...reviews,
+    ...vacancies,
+  ];
 };
 
 const documents: IdentifiedSanityDocumentStub[] = await buildDocuments();

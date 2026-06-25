@@ -2,6 +2,8 @@ import type {
   BrandLogo,
   GalleryImage,
   ImageRef,
+  JobsBenefit,
+  JobsPageContent,
   LandingContent,
   ServiceCategory,
   ServiceCategoryId,
@@ -595,6 +597,104 @@ const brands: BrandLogo[] = [
     image: img("/img/brands/matrix.png", "Matrix"),
   },
 ];
+
+const jobsBenefits: JobsBenefit[] = [
+  {
+    id: "team-care",
+    label: "Забота о команде",
+    text: "Комфортные условия",
+    icon: "heart",
+  },
+  {
+    id: "education",
+    label: "Обучение",
+    text: "Рост и развитие",
+    icon: "education",
+  },
+  {
+    id: "fair-pay",
+    label: "Справедливая оплата",
+    text: "Прозрачные условия",
+    icon: "percent",
+  },
+  {
+    id: "atmosphere",
+    label: "Дружная атмосфера",
+    text: "Поддержка каждый день",
+    icon: "star",
+  },
+];
+
+const jobsWorkBenefits: JobsBenefit[] = [
+  {
+    id: "studio",
+    label: "Комфортная студия",
+    text: "Стильное рабочее место",
+    icon: "gift",
+  },
+  {
+    id: "schedule",
+    label: "Гибкий график",
+    text: "Уважаем личное время",
+    icon: "percent",
+  },
+  {
+    id: "training",
+    label: "Регулярное обучение",
+    text: "За счет компании",
+    icon: "education",
+  },
+  {
+    id: "growth",
+    label: "Карьерный рост",
+    text: "Поддержка развития",
+    icon: "growth",
+  },
+  {
+    id: "discounts",
+    label: "Корпоративные скидки",
+    text: "На услуги и косметику",
+    icon: "star",
+  },
+];
+
+const jobsApplicationUrl = "https://t.me/ODaBEAUTY67";
+
+export const getStaticJobsPageContent = (): JobsPageContent => ({
+  page: {
+    seo: {
+      title: "Вакансии ODa Beauty - работа в салоне красоты",
+      description:
+        "Вакансии салона красоты ODa Beauty в Смоленске: мастера маникюра, бровисты, лешмейкеры, парикмахеры, администраторы и помощники мастеров.",
+      canonicalUrl: "https://oda-beauty.ru/job",
+      keywords: [
+        "вакансии салон красоты Смоленск",
+        "работа мастер маникюра Смоленск",
+        "ODa Beauty вакансии",
+        "работа бровист Смоленск",
+      ],
+    },
+    hero: {
+      title: "Присоединяйтесь к команде ODa",
+      text:
+        "Мы всегда в поиске талантливых и увлеченных своим делом специалистов, которые разделяют наши ценности и любовь к красоте.",
+      ctaLabel: "Смотреть вакансии",
+      ctaUrl: "#vacancies",
+      image: img("/img/salon-mirrors.jpg", "Интерьер салона красоты ODa Beauty"),
+    },
+    benefits: jobsBenefits,
+    workBenefits: jobsWorkBenefits,
+    resumeCta: {
+      title: "Не нашли подходящую вакансию, но хотите работать с нами?",
+      text:
+        "Отправьте свое резюме в Telegram — мы свяжемся с вами, если появится подходящая позиция.",
+      buttonLabel: "Отправить резюме",
+      url: jobsApplicationUrl,
+      image: img("/img/jobs/resume-telegram.png", "Основатель ODa Beauty в салоне"),
+    },
+  },
+  vacancies: [],
+});
 
 export const getStaticLandingContent = (): LandingContent => ({
   seo: {

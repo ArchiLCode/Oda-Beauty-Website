@@ -1,14 +1,22 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
 import type { LandingContent } from '../content/types';
+import type { SeoContent } from '../content/types';
 import { createBeautySalonJsonLd } from '../content/structured-data';
 
 interface Props {
   content: LandingContent;
+  seo?: SeoContent;
+  ogImage?: string;
 }
 
-const { content } = Astro.props;
+const { content, seo = content.seo, ogImage = content.hero.desktopImage.src } = Astro.props;
 const jsonLd = createBeautySalonJsonLd(content);
+const canonicalOrigin = new URL(seo.canonicalUrl).origin;
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${canonicalOrigin}${ogImage}`;
 ---
 
 <!doctype html>
@@ -16,23 +24,38 @@ const jsonLd = createBeautySalonJsonLd(content);
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={content.seo.description} />
-    <meta name="keywords" content={content.seo.keywords.join(', ')} />
-    <link rel="canonical" href={content.seo.canonicalUrl} />
+    <meta name="description" content={seo.description} />
+    <meta name="keywords" content={seo.keywords.join(', ')} />
+    <link rel="canonical" href={seo.canonicalUrl} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate icon" href="/favicon.ico" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={content.seo.title} />
-    <meta property="og:description" content={content.seo.description} />
-    <meta property="og:url" content={content.seo.canonicalUrl} />
-    <meta property="og:image" content={`${content.seo.canonicalUrl.replace(/\/$/, '')}${content.hero.desktopImage.src}`} />
+    <meta property="og:title" content={seo.title} />
+    <meta property="og:description" content={seo.description} />
+    <meta property="og:url" content={seo.canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={content.seo.title} />
-    <meta name="twitter:description" content={content.seo.description} />
-    <title>{content.seo.title}</title>
+    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:description" content={seo.description} />
+    <title>{seo.title}</title>
     <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    <ClientRouter />
   </head>
   <body>
-    <slot />
+    <div class="page-shell">
+      <div transition:persist="site-header">
+        <Header content={content} />
+      </div>
+      <main transition:name="page-main">
+        <slot />
+      </main>
+      <div transition:persist="site-footer">
+        <Footer content={content} />
+      </div>
+      <a class="floating-cta glass" href={content.hero.bookingUrl} target="_blank" rel="noreferrer" data-floating-cta>
+        Онлайн<br />запись
+      </a>
+    </div>
+    <script src="../scripts/site.ts"></script>
   </body>
 </html>

@@ -28,8 +28,9 @@ CONTENT_SOURCE=static npm run verify
 CONTENT_SOURCE=sanity npm run build
 ```
 
-The CMS build deliberately fails if project configuration, the `landingPage` singleton, a relation, or
-required content is missing. The singleton document id must remain `landingPage`.
+The CMS build deliberately fails if project configuration, the `landingPage` or `jobsPage` singleton,
+a relation, or required content is missing. The singleton document ids must remain `landingPage` and
+`jobsPage`.
 
 ## 3. Configure GitHub Actions
 
@@ -64,6 +65,8 @@ In Sanity Manage, add a webhook with these values:
 ```groq
 _type in [
   "landingPage",
+  "jobsPage",
+  "jobVacancy",
   "serviceCategory",
   "service",
   "teamMember",

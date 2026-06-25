@@ -24,10 +24,10 @@ export default defineConfig({
   },
   document: {
     actions: (previous, context) =>
-      context.schemaType === 'landingPage'
+      context.schemaType === 'landingPage' || context.schemaType === 'jobsPage'
         ? previous.filter(({ action }) => action !== 'delete' && action !== 'duplicate')
         : previous,
     newDocumentOptions: (previous) =>
-      previous.filter(({ templateId }) => templateId !== 'landingPage'),
+      previous.filter(({ templateId }) => templateId !== 'landingPage' && templateId !== 'jobsPage'),
   },
 });

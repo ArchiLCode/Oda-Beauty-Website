@@ -1,8 +1,6 @@
 ---
 import About from '../components/About.astro';
-import Footer from '../components/Footer.astro';
 import Gallery from '../components/Gallery.astro';
-import Header from '../components/Header.astro';
 import Hero from '../components/Hero.astro';
 import PopularServices from '../components/PopularServices.astro';
 import Reviews from '../components/Reviews.astro';
@@ -15,21 +13,11 @@ const content = await getLandingContent();
 ---
 
 <BaseLayout content={content}>
-  <div class="page-shell">
-    <Header content={content} />
-    <main>
-      <Hero content={content} />
-      <PopularServices content={content} />
-      <About content={content} />
-      <Services content={content} />
-      <Gallery content={content} />
-      <Team content={content} />
-      <Reviews content={content} />
-    </main>
-    <Footer content={content} />
-    <a class="floating-cta glass" href={content.hero.bookingUrl} target="_blank" rel="noreferrer" data-floating-cta>
-      Онлайн<br />запись
-    </a>
-  </div>
-  <script src="../scripts/site.ts"></script>
+  <Hero content={content} />
+  <PopularServices content={content} />
+  <About content={content} />
+  <Services content={content} />
+  <Gallery content={content} />
+  <Team content={content} />
+  <Reviews content={content} />
 </BaseLayout>
