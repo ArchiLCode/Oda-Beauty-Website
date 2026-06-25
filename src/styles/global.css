@@ -674,6 +674,339 @@ img {
   stroke-width: 1.8;
 }
 
+.jobs-page {
+  padding-top: 112px;
+}
+
+.jobs-hero {
+  position: relative;
+  display: grid;
+  min-height: 454px;
+  align-items: center;
+  gap: 52px;
+  grid-template-columns: minmax(0, 0.82fr) minmax(430px, 1.18fr);
+  padding: 18px 0 38px;
+}
+
+.jobs-hero-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 22px;
+  max-width: 520px;
+}
+
+.jobs-breadcrumb {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #5f5559;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.jobs-breadcrumb a {
+  text-decoration: none;
+}
+
+.jobs-breadcrumb a:hover {
+  color: var(--color-rose-deep);
+}
+
+.jobs-title {
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-size: 50px;
+  font-weight: 400;
+  line-height: 1.08;
+}
+
+.jobs-title span {
+  color: var(--color-rose);
+}
+
+.jobs-lead {
+  max-width: 430px;
+  margin: 0;
+  color: #3d3438;
+  font-size: 16px;
+  line-height: 1.62;
+}
+
+.jobs-hero-button {
+  width: fit-content;
+}
+
+.jobs-hero-media {
+  position: relative;
+  min-height: 360px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+}
+
+.jobs-hero-media img {
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  object-fit: cover;
+}
+
+.jobs-hero-media::before,
+.jobs-hero-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.jobs-hero-media::before {
+  background:
+    linear-gradient(90deg, var(--color-page) 0%, rgba(255, 247, 247, 0.66) 10%, rgba(255, 247, 247, 0) 32%),
+    linear-gradient(180deg, rgba(255, 247, 247, 0) 54%, var(--color-page) 100%);
+}
+
+.jobs-hero-media::after {
+  background: linear-gradient(270deg, rgba(255, 247, 247, 0), rgba(255, 247, 247, 0.18));
+}
+
+.jobs-benefits {
+  display: grid;
+  gap: 28px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 0 0 34px;
+}
+
+.jobs-benefit {
+  display: grid;
+  align-items: center;
+  gap: 12px;
+  grid-template-columns: 34px minmax(0, 1fr);
+}
+
+.jobs-benefit h2,
+.jobs-work-benefit h3 {
+  margin: 0;
+  color: #40373a;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.jobs-benefit p,
+.jobs-work-benefit p {
+  margin: 3px 0 0;
+  color: #63585c;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.jobs-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: var(--color-rose);
+}
+
+.jobs-icon svg {
+  width: 29px;
+  height: 29px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.5;
+}
+
+.jobs-vacancies-panel {
+  padding: 28px 24px 24px;
+}
+
+.jobs-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.job-card {
+  display: grid;
+  border-color: rgba(235, 196, 205, 0.68);
+  box-shadow: 0 12px 28px rgba(118, 68, 84, 0.06);
+}
+
+.job-card img {
+  width: 100%;
+  aspect-ratio: 1.85;
+  object-fit: cover;
+}
+
+.job-card-body {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+}
+
+.job-card h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.28;
+}
+
+.job-salary,
+.job-experience {
+  margin: 5px 0 0;
+  color: #42393c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.job-experience {
+  color: #74686c;
+  font-weight: 600;
+}
+
+.job-requirements {
+  display: grid;
+  gap: 9px;
+  margin: 0;
+  padding: 0;
+  color: #51474b;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.42;
+  list-style: none;
+}
+
+.job-requirements li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.job-requirements li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-rose);
+  font-weight: 800;
+}
+
+.job-card .button {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.jobs-empty {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 42px 18px;
+  text-align: center;
+}
+
+.jobs-empty h3 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 24px;
+  font-weight: 400;
+}
+
+.jobs-empty p {
+  max-width: 470px;
+  margin: 0;
+  color: #52484b;
+  font-size: 14px;
+}
+
+.jobs-work-panel {
+  display: grid;
+  gap: 28px;
+  border: 1px solid rgba(238, 199, 209, 0.58);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  background:
+    radial-gradient(circle at 8% 0%, rgba(255, 255, 255, 0.76), transparent 14rem),
+    linear-gradient(100deg, rgba(255, 246, 248, 0.94), rgba(248, 219, 228, 0.78));
+  box-shadow: var(--shadow-soft);
+  text-align: center;
+}
+
+.jobs-work-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.jobs-work-benefit {
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.jobs-resume-panel {
+  position: relative;
+  display: grid;
+  min-height: 190px;
+  align-items: center;
+  grid-template-columns: minmax(230px, 0.58fr) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid rgba(238, 199, 209, 0.6);
+  border-radius: var(--radius-lg);
+  background:
+    linear-gradient(90deg, rgba(255, 248, 249, 0.94), rgba(248, 219, 228, 0.78)),
+    var(--color-panel-strong);
+  box-shadow: var(--shadow-soft);
+}
+
+.jobs-resume-image {
+  height: 100%;
+  min-height: 190px;
+  overflow: hidden;
+}
+
+.jobs-resume-image img {
+  width: 100%;
+  height: 100%;
+  min-height: 190px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.jobs-resume-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 12px;
+  max-width: 560px;
+  padding: 30px 38px;
+}
+
+.jobs-resume-copy h2 {
+  max-width: 520px;
+  margin: 0;
+  color: var(--color-ink);
+  font-family: var(--font-heading);
+  font-size: 29px;
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.jobs-resume-copy p {
+  max-width: 430px;
+  margin: 0;
+  color: #453c3f;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.jobs-resume-copy .button {
+  width: fit-content;
+  margin-top: 4px;
+}
+
 .card {
   border: 1px solid rgba(230, 190, 201, 0.52);
   border-radius: var(--radius-sm);
@@ -1215,6 +1548,12 @@ img {
   text-decoration: none;
 }
 
+.footer-bottom-links {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
 .footer-bottom span:last-child {
   justify-self: end;
 }
@@ -1335,6 +1674,40 @@ img {
   .hero-benefits {
     width: 100%;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .jobs-page {
+    padding-top: 104px;
+  }
+
+  .jobs-hero {
+    min-height: auto;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .jobs-hero-media {
+    position: absolute;
+    z-index: 0;
+    inset: 0 0 auto auto;
+    width: 70%;
+    min-height: 410px;
+    opacity: 0.52;
+  }
+
+  .jobs-hero-copy {
+    min-height: 390px;
+    justify-content: center;
+  }
+
+  .jobs-benefits,
+  .jobs-grid,
+  .jobs-work-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .jobs-work-grid {
+    justify-items: center;
   }
 
   .popular-grid,
@@ -1595,6 +1968,197 @@ img {
   .hero-benefits span {
     width: 28px;
     height: 28px;
+  }
+
+  .jobs-page {
+    padding-top: 104px;
+  }
+
+  .jobs-hero {
+    min-height: auto;
+    align-items: start;
+    padding: 0 0 24px;
+  }
+
+  .jobs-hero-copy {
+    min-height: auto;
+    gap: 17px;
+    max-width: 292px;
+    padding-top: 2px;
+  }
+
+  .jobs-breadcrumb {
+    font-size: 10px;
+  }
+
+  .jobs-title {
+    font-size: 31px;
+    line-height: 1.08;
+  }
+
+  .jobs-lead {
+    max-width: 272px;
+    font-size: 14px;
+    line-height: 1.62;
+  }
+
+  .jobs-hero-button {
+    width: min(214px, 100%);
+  }
+
+  .jobs-hero-media {
+    display: none;
+  }
+
+  .jobs-benefits {
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 22px;
+  }
+
+  .jobs-benefit {
+    gap: 8px;
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .jobs-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .jobs-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .jobs-benefit h2,
+  .jobs-work-benefit h3 {
+    font-size: 10px;
+  }
+
+  .jobs-benefit p,
+  .jobs-work-benefit p {
+    font-size: 9px;
+  }
+
+  .jobs-vacancies-panel {
+    padding: 18px;
+  }
+
+  .jobs-vacancies-panel .section-heading {
+    margin-bottom: 18px;
+  }
+
+  .jobs-all-link {
+    display: none;
+  }
+
+  .jobs-grid {
+    gap: 14px;
+    grid-template-columns: 1fr;
+  }
+
+  .job-card {
+    min-height: 126px;
+    grid-template-columns: 112px minmax(0, 1fr);
+    border-radius: 14px;
+  }
+
+  .job-card img {
+    width: 112px;
+    height: 100%;
+    min-height: 126px;
+    aspect-ratio: auto;
+  }
+
+  .job-card-body {
+    align-content: center;
+    gap: 7px;
+    padding: 12px;
+  }
+
+  .job-card h3 {
+    font-size: 13px;
+    line-height: 1.25;
+  }
+
+  .job-salary,
+  .job-experience {
+    margin-top: 3px;
+    font-size: 10px;
+  }
+
+  .job-requirements {
+    gap: 4px;
+    font-size: 9px;
+    line-height: 1.32;
+  }
+
+  .job-requirements li {
+    padding-left: 14px;
+  }
+
+  .job-card .button {
+    min-height: 34px;
+    padding: 9px 14px;
+    font-size: 10px;
+  }
+
+  .jobs-work-panel {
+    gap: 20px;
+    border-radius: 16px;
+    padding: 22px 16px;
+  }
+
+  .jobs-work-grid {
+    gap: 18px 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .jobs-resume-panel {
+    min-height: 224px;
+    grid-template-columns: 1fr;
+  }
+
+  .jobs-resume-image {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 48%;
+    min-height: 224px;
+    opacity: 0.84;
+  }
+
+  .jobs-resume-image img {
+    min-height: 224px;
+  }
+
+  .jobs-resume-panel::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255, 246, 248, 0.58), rgba(255, 246, 248, 0.96) 46%, rgba(248, 219, 228, 0.84));
+  }
+
+  .jobs-resume-copy {
+    justify-self: end;
+    max-width: 260px;
+    padding: 24px 18px 24px 116px;
+  }
+
+  .jobs-resume-copy h2 {
+    font-size: 19px;
+    line-height: 1.16;
+  }
+
+  .jobs-resume-copy p {
+    font-size: 11px;
+    line-height: 1.48;
+  }
+
+  .jobs-resume-copy .button {
+    min-height: 40px;
+    padding: 12px 18px;
+    font-size: 11px;
   }
 
   #popular {
@@ -2127,6 +2691,11 @@ img {
     padding-top: 16px;
     border-top: 1px solid rgba(216, 121, 153, 0.2);
     font-size: 10px;
+  }
+
+  .footer-bottom-links {
+    justify-content: start;
+    gap: 12px;
   }
 
   .footer-bottom span:last-child {

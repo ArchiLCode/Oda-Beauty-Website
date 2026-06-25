@@ -12,7 +12,7 @@ const { content } = Astro.props;
 <footer class="footer" id="contacts">
   <div class="container footer-grid">
     <div class="footer-brand-block">
-      <a class="footer-brand" href="#main">
+      <a class="footer-brand" href="/#main">
         <span class="brand-wordmark">O<span>Da</span></span>
         <small>Beauty Salon</small>
       </a>
@@ -47,7 +47,10 @@ const { content } = Astro.props;
   </div>
   <div class="container footer-bottom">
     <span>© 2026 ODa Beauty Salon</span>
-    <a href="#main">Политика конфиденциальности</a>
+    <div class="footer-bottom-links">
+      <a href="/job">Вакансии</a>
+      <a href="/#main">Политика конфиденциальности</a>
+    </div>
     <span>Сделано с любовью <span aria-hidden="true">♡</span></span>
   </div>
 </footer>

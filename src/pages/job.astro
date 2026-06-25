@@ -1,0 +1,14 @@
+---
+import JobsPage from '../components/JobsPage.astro';
+import { getJobsPageContent, getLandingContent } from '../content/provider';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const [content, jobsContent] = await Promise.all([
+  getLandingContent(),
+  getJobsPageContent(),
+]);
+---
+
+<BaseLayout content={content} seo={jobsContent.page.seo} ogImage={jobsContent.page.hero.image.src}>
+  <JobsPage content={jobsContent} />
+</BaseLayout>

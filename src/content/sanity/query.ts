@@ -70,3 +70,49 @@ export const landingContentQuery = defineQuery(`{
     order
   }
 }`);
+
+export const jobsContentQuery = defineQuery(`{
+  "page": *[_type == "jobsPage" && _id == "jobsPage"][0]{
+    seo,
+    hero{
+      title,
+      text,
+      ctaLabel,
+      ctaUrl,
+      "image": image${imageProjection}
+    },
+    benefits[] | order(order asc){
+      id,
+      label,
+      text,
+      icon,
+      order
+    },
+    workBenefits[] | order(order asc){
+      id,
+      label,
+      text,
+      icon,
+      order
+    },
+    resumeCta{
+      title,
+      text,
+      buttonLabel,
+      url,
+      "image": image${imageProjection}
+    }
+  },
+  "vacancies": *[_type == "jobVacancy" && published != false] | order(order asc, title asc){
+    id,
+    title,
+    salary,
+    experience,
+    requirements,
+    applicationUrl,
+    buttonLabel,
+    published,
+    order,
+    "image": image${imageProjection}
+  }
+}`);

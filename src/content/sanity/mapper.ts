@@ -1,5 +1,5 @@
-import type { ImageRef, LandingContent } from '../types';
-import type { SanityImage, SanityLandingPayload } from './types';
+import type { ImageRef, JobsBenefit, JobsPageContent, LandingContent } from '../types';
+import type { SanityImage, SanityJobsPayload, SanityLandingPayload } from './types';
 
 const mapImage = (image: SanityImage): ImageRef => ({
   src: image.url,
@@ -48,5 +48,35 @@ export const mapSanityLandingContent = (payload: SanityLandingPayload): LandingC
       ...landing.reviews,
       items: payload.reviews.map(({ order: _order, ...review }) => review),
     },
+  };
+};
+
+const mapBenefit = ({ order: _order, ...benefit }: JobsBenefit & { order?: number }): JobsBenefit => benefit;
+
+export const mapSanityJobsPageContent = (payload: SanityJobsPayload): JobsPageContent => {
+  if (!payload.page) {
+    throw new Error('Sanity jobsPage document was not found.');
+  }
+
+  const page = payload.page;
+
+  return {
+    page: {
+      seo: page.seo,
+      hero: {
+        ...page.hero,
+        image: mapImage(page.hero.image),
+      },
+      benefits: page.benefits.map(mapBenefit),
+      workBenefits: page.workBenefits.map(mapBenefit),
+      resumeCta: {
+        ...page.resumeCta,
+        image: mapImage(page.resumeCta.image),
+      },
+    },
+    vacancies: payload.vacancies.map(({ order: _order, image, ...vacancy }) => ({
+      ...vacancy,
+      image: mapImage(image),
+    })),
   };
 };

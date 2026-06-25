@@ -1,4 +1,4 @@
-import type { ContentValidationResult, LandingContent, ServiceCategoryId } from './types';
+import type { ContentValidationResult, JobsPageContent, LandingContent, ServiceCategoryId } from './types';
 
 const hasText = (value: unknown): value is string =>
   typeof value === 'string' && value.trim().length > 0;
@@ -160,6 +160,130 @@ export const validateLandingContent = (content: LandingContent): ContentValidati
   }
   if (!hasText(content.about.image?.src) || !hasText(content.about.image?.alt)) {
     errors.push('About image is incomplete.');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors,
+  };
+};
+
+export const validateJobsPageContent = (content: JobsPageContent): ContentValidationResult => {
+  const errors: string[] = [];
+
+  if (!hasText(content.page.seo?.title)) {
+    errors.push('Jobs SEO is missing title.');
+  }
+  if (!hasText(content.page.seo?.description)) {
+    errors.push('Jobs SEO is missing description.');
+  }
+  if (!hasUrl(content.page.seo?.canonicalUrl)) {
+    errors.push('Jobs SEO is missing canonicalUrl.');
+  }
+  if (!hasText(content.page.hero?.title)) {
+    errors.push('Jobs hero is missing title.');
+  }
+  if (!hasText(content.page.hero?.text)) {
+    errors.push('Jobs hero is missing text.');
+  }
+  if (!hasText(content.page.hero?.ctaLabel)) {
+    errors.push('Jobs hero is missing ctaLabel.');
+  }
+  if (!hasText(content.page.hero?.ctaUrl)) {
+    errors.push('Jobs hero is missing ctaUrl.');
+  }
+  if (!hasText(content.page.hero?.image?.src)) {
+    errors.push('Jobs hero is missing image source.');
+  }
+  if (!hasText(content.page.hero?.image?.alt)) {
+    errors.push('Jobs hero is missing image alt text.');
+  }
+
+  content.page.benefits.forEach((benefit, index) => {
+    if (!hasText(benefit.id)) {
+      errors.push(`Jobs benefit "${index}" is missing id.`);
+    }
+    if (!hasText(benefit.label)) {
+      errors.push(`Jobs benefit "${index}" is missing label.`);
+    }
+    if (!hasText(benefit.text)) {
+      errors.push(`Jobs benefit "${benefit.id || index}" is missing text.`);
+    }
+    if (!hasText(benefit.icon)) {
+      errors.push(`Jobs benefit "${benefit.id || index}" is missing icon.`);
+    }
+  });
+
+  content.page.workBenefits.forEach((benefit, index) => {
+    if (!hasText(benefit.id)) {
+      errors.push(`Jobs work benefit "${index}" is missing id.`);
+    }
+    if (!hasText(benefit.label)) {
+      errors.push(`Jobs work benefit "${index}" is missing label.`);
+    }
+    if (!hasText(benefit.text)) {
+      errors.push(`Jobs work benefit "${benefit.id || index}" is missing text.`);
+    }
+    if (!hasText(benefit.icon)) {
+      errors.push(`Jobs work benefit "${benefit.id || index}" is missing icon.`);
+    }
+  });
+
+  if (!hasText(content.page.resumeCta?.title)) {
+    errors.push('Jobs resume CTA is missing title.');
+  }
+  if (!hasText(content.page.resumeCta?.text)) {
+    errors.push('Jobs resume CTA is missing text.');
+  }
+  if (!hasText(content.page.resumeCta?.buttonLabel)) {
+    errors.push('Jobs resume CTA is missing buttonLabel.');
+  }
+  if (!hasUrl(content.page.resumeCta?.url)) {
+    errors.push('Jobs resume CTA is missing url.');
+  }
+  if (!hasText(content.page.resumeCta?.image?.src)) {
+    errors.push('Jobs resume CTA is missing image source.');
+  }
+  if (!hasText(content.page.resumeCta?.image?.alt)) {
+    errors.push('Jobs resume CTA is missing image alt text.');
+  }
+
+  const vacancyIds = new Set<string>();
+  for (const vacancy of content.vacancies) {
+    if (vacancyIds.has(vacancy.id)) {
+      errors.push(`Vacancy has a duplicate id "${vacancy.id}".`);
+    }
+    vacancyIds.add(vacancy.id);
+
+    if (!hasText(vacancy.title)) {
+      errors.push(`Vacancy "${vacancy.id}" is missing title.`);
+    }
+    if (!hasText(vacancy.salary)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing salary.`);
+    }
+    if (!hasText(vacancy.experience)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing experience.`);
+    }
+    if (vacancy.requirements.length === 0) {
+      errors.push(`Vacancy "${vacancy.title}" must have at least one requirement.`);
+    }
+    vacancy.requirements.forEach((requirement, index) => {
+      if (!hasText(requirement)) {
+        errors.push(`Vacancy "${vacancy.title}" has an empty requirement at index ${index}.`);
+      }
+    });
+    if (!hasUrl(vacancy.applicationUrl)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing applicationUrl.`);
+    }
+    if (!hasText(vacancy.buttonLabel)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing buttonLabel.`);
+    }
+    if (!hasText(vacancy.image?.src)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing image source.`);
+    }
+    if (!hasText(vacancy.image?.alt)) {
+      errors.push(`Vacancy "${vacancy.title}" is missing image alt text.`);
+    }
   }
 
   return {

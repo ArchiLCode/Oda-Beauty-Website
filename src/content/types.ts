@@ -72,6 +72,49 @@ export interface SeoContent {
   keywords: string[];
 }
 
+export interface JobsBenefit {
+  id: string;
+  label: string;
+  text: string;
+  icon: string;
+}
+
+export interface JobVacancy {
+  id: string;
+  title: string;
+  salary: string;
+  experience: string;
+  requirements: string[];
+  applicationUrl: string;
+  buttonLabel: string;
+  image: ImageRef;
+  order?: number;
+  published?: boolean;
+}
+
+export interface JobsPageContent {
+  page: {
+    seo: SeoContent;
+    hero: {
+      title: string;
+      text: string;
+      ctaLabel: string;
+      ctaUrl: string;
+      image: ImageRef;
+    };
+    benefits: JobsBenefit[];
+    workBenefits: JobsBenefit[];
+    resumeCta: {
+      title: string;
+      text: string;
+      buttonLabel: string;
+      url: string;
+      image: ImageRef;
+    };
+  };
+  vacancies: JobVacancy[];
+}
+
 export interface LandingContent {
   seo: SeoContent;
   nav: Array<{ label: string; href: string }>;

@@ -1,4 +1,4 @@
-import type { ContactInfo, ImageRef, SeoContent } from '../types';
+import type { ContactInfo, ImageRef, JobsBenefit, SeoContent } from '../types';
 
 export interface SanityImage {
   url: string;
@@ -77,5 +77,40 @@ export interface SanityLandingPayload {
     author: string;
     rating: number;
     text: string;
+  }>;
+}
+
+export interface SanityJobsPageDocument {
+  seo: SeoContent;
+  hero: {
+    title: string;
+    text: string;
+    ctaLabel: string;
+    ctaUrl: string;
+    image: SanityImage;
+  };
+  benefits: Array<OrderedDocument & JobsBenefit>;
+  workBenefits: Array<OrderedDocument & JobsBenefit>;
+  resumeCta: {
+    title: string;
+    text: string;
+    buttonLabel: string;
+    url: string;
+    image: SanityImage;
+  };
+}
+
+export interface SanityJobsPayload {
+  page: SanityJobsPageDocument | null;
+  vacancies: Array<OrderedDocument & {
+    id: string;
+    title: string;
+    salary: string;
+    experience: string;
+    requirements: string[];
+    applicationUrl: string;
+    buttonLabel: string;
+    image: SanityImage;
+    published?: boolean;
   }>;
 }

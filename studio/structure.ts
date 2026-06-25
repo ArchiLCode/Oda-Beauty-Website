@@ -8,7 +8,12 @@ export const structure: StructureResolver = (S) =>
         .title('Лендинг')
         .id('landingPage')
         .child(S.document().schemaType('landingPage').documentId('landingPage')),
+      S.listItem()
+        .title('Страница вакансий')
+        .id('jobsPage')
+        .child(S.document().schemaType('jobsPage').documentId('jobsPage')),
       S.divider(),
+      S.documentTypeListItem('jobVacancy').title('Вакансии'),
       S.documentTypeListItem('serviceCategory').title('Категории услуг'),
       S.documentTypeListItem('service').title('Услуги'),
       S.documentTypeListItem('teamMember').title('Команда'),
