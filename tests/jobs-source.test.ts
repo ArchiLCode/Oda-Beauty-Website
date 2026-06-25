@@ -71,4 +71,15 @@ describe('jobs page source integration', () => {
     expect(cmsDocs).toContain('"jobVacancy"');
     expect(sitemap).toContain("new URL('/job', site)");
   });
+
+  it('has a targeted import command for the jobs page singleton without vacancies', () => {
+    const packageJson = readSource('../package.json');
+    const jobsImportScript = readSource('../scripts/import-sanity-jobs-page.ts');
+
+    expect(packageJson).toContain('"sanity:import:jobs"');
+    expect(jobsImportScript).toContain("_id: 'jobsPage'");
+    expect(jobsImportScript).toContain("getStaticJobsPageContent");
+    expect(jobsImportScript).not.toContain("_type: 'jobVacancy'");
+    expect(jobsImportScript).not.toContain('toSanityDocumentId');
+  });
 });

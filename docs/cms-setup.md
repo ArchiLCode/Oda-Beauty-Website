@@ -18,6 +18,10 @@ documents, validates the mapped `LandingContent`, and writes the result to `dist
 The import script does not upload fixed social-network SVG icons. It stores their existing `/img/*.svg`
 paths in `landingPage`; every other landing image is uploaded to Sanity Assets with required alt text.
 
+To create or refresh only the vacancies page singleton without touching landing content, services, team,
+reviews, or vacancies, run `npm run sanity:import:jobs`. This imports the static `jobsPage` shell and
+leaves the `jobVacancy` collection empty.
+
 For a private dataset, create a Viewer token and set `SANITY_READ_TOKEN` in local and GitHub build
 environments. A public dataset does not require a read token.
 

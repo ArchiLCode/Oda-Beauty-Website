@@ -12,7 +12,8 @@
     "studio:dev": "sanity dev",
     "studio:deploy": "sanity deploy",
     "studio:schema": "sanity schemas extract --enforce-required-fields --path studio/schema.json",
-    "sanity:import": "node --import tsx scripts/import-sanity-content.ts"
+    "sanity:import": "node --import tsx scripts/import-sanity-content.ts",
+    "sanity:import:jobs": "node --import tsx scripts/import-sanity-jobs-page.ts"
   },
   "dependencies": {
     "@fontsource/federo": "^5.2.8",
