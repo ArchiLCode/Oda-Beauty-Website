@@ -1,4 +1,5 @@
 import type { ImageRef, JobsBenefit, JobsPageContent, LandingContent } from '../types';
+import { getStaticJobsPageContent } from '../static-provider';
 import type { SanityImage, SanityJobsPayload, SanityLandingPayload } from './types';
 
 const mapImage = (image: SanityImage): ImageRef => ({
@@ -55,7 +56,7 @@ const mapBenefit = ({ order: _order, ...benefit }: JobsBenefit & { order?: numbe
 
 export const mapSanityJobsPageContent = (payload: SanityJobsPayload): JobsPageContent => {
   if (!payload.page) {
-    throw new Error('Sanity jobsPage document was not found.');
+    return getStaticJobsPageContent();
   }
 
   const page = payload.page;

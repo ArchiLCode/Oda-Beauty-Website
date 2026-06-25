@@ -71,15 +71,25 @@ describe('Sanity jobs mapper', () => {
     expect((content as { vacancies: Array<{ image: { alt: string } }> }).vacancies[0].image.alt).toBe('Работа мастера маникюра');
   });
 
-  it('fails fast when the jobs singleton is missing', async () => {
+  it('falls back to the empty static jobs shell when the jobs singleton is missing', async () => {
     const mapper = await import('../src/content/sanity/mapper');
+    const validate = await import('../src/content/validate');
     const mapSanityJobsPageContent = (mapper as Record<string, unknown>).mapSanityJobsPageContent as
       | ((value: unknown) => unknown)
       | undefined;
+    const validateJobsPageContent = (validate as Record<string, unknown>).validateJobsPageContent as
+      | ((value: unknown) => { errors: string[] })
+      | undefined;
 
     expect(typeof mapSanityJobsPageContent).toBe('function');
-    expect(() => mapSanityJobsPageContent?.({ ...payload, page: null })).toThrow(
-      'Sanity jobsPage document was not found.',
-    );
+    expect(typeof validateJobsPageContent).toBe('function');
+
+    const content = mapSanityJobsPageContent?.({ ...payload, page: null });
+    const result = validateJobsPageContent?.(content);
+
+    expect(result?.errors).toEqual([]);
+    expect((content as { page: { hero: { title: string }; resumeCta: { url: string } } }).page.hero.title).toContain('ODa');
+    expect((content as { page: { resumeCta: { url: string } } }).page.resumeCta.url).toBe('https://t.me/ODaBEAUTY67');
+    expect((content as { vacancies: unknown[] }).vacancies).toEqual([]);
   });
 });
